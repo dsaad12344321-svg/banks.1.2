@@ -63,7 +63,7 @@ export default function RootLayout({
         <meta property="og:country-name" content="Egypt" />
         
         {/* Twitter additional tags */}
-        <meta name="twitter:domain" content="egyptian-bank-certificates.vercel.app" />
+        <meta name="twitter:domain" content="daleelakelbanky.vercel.app" />
         
         {/* Facebook additional tags */}
         <meta property="fb:app_id" content="1234567890123456" />

@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 const DAYS_MAP: Record<string, number> = {
   "3": 91,
@@ -74,6 +75,10 @@ export default function TreasuryBillsCalculatorClient() {
           value={rate}
           onChange={(e) => setRate(e.target.value)}
         />
+        <Link href="https://www.cbe.org.eg/ar/auctions/egp-t-bills" 
+              className="text-blue-500 hover:underline text-[10px]">
+          موقع البنك المركزى
+        </Link>
 
         <Select value={duration} onValueChange={setDuration}>
           <SelectTrigger>

@@ -34,7 +34,7 @@ export default function TreasuryBillsCalculatorClient() {
 
   function calculate() {
       // Open smart link in new window
-        const smartLink = 'https://www.effectivegatecpm.com/zi4we4ije?key=04861c118556f3663575520723c26923'
+        const smartLink = 'https://otieu.com/4/10544601'
         window.open(smartLink, '_blank', 'noopener,noreferrer'); 
     const principal = Number(amount);
     const interestRate = Number(rate) / 100;
@@ -125,3 +125,4 @@ export default function TreasuryBillsCalculatorClient() {
     </div>
   );
 }
+

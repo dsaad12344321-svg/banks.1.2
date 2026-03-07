@@ -48,7 +48,7 @@ interface Bank {
 ========================= */
 
 export const metadata = generateSEOMetadata({
-  title: 'حاسبة شهادات الودائع البنكية المصرية',
+  title: 'حاسبة الشهادات واذون الخزانة',
   description:
     'احسب أرباح شهادات الادخار المصرية بدقة. مقارنة بين أفضل البنوك المصرية وأسعار الفائدة للشهادات الثابتة والمتغيرة والمتدرجة.',
   keywords: [
@@ -63,6 +63,7 @@ export const metadata = generateSEOMetadata({
     'حساب الربح الشهري',
     'شهادات البنك الأهلي',
     'شهادات بنك مصر',
+    'حاسبة اذون الخزانة',
   ],
   ogType: 'website',
   canonical: SITE_URL,

@@ -17,6 +17,7 @@ const DAYS_MAP: Record<string, number> = {
   "3": 91,
   "6": 182,
   "9": 273,
+  "11":336,
   "12": 364,
 };
 

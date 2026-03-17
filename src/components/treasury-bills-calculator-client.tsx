@@ -89,6 +89,7 @@ export default function TreasuryBillsCalculatorClient() {
             <SelectItem value="3">3 شهور</SelectItem>
             <SelectItem value="6">6 شهور</SelectItem>
             <SelectItem value="9">9 شهور</SelectItem>
+            <SelectItem value="11">11 شهر</SelectItem>
             <SelectItem value="12">سنة</SelectItem>
           </SelectContent>
         </Select>

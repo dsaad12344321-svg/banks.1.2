@@ -27,6 +27,8 @@ export default function TreasuryBillsCalculatorClient() {
   const [duration, setDuration] = useState("3");
 
   const [result, setResult] = useState<null | {
+    poundValue: number;
+    actualDeduction: number;
     upfrontProfit: number;
     tax: number;
     netProfit: number;
@@ -42,15 +44,17 @@ export default function TreasuryBillsCalculatorClient() {
     const days = DAYS_MAP[duration];
 
     if (!principal || !interestRate || !days) return;
-
-    const upfrontProfit =
-      ((1 / ((days / 365) * interestRate + 1)) * principal - principal) * -1;
+    const poundValue=(1 / ((days / 365) * interestRate + 1));
+    const actualDeduction = poundValue * principal;
+    const upfrontProfit =principal-actualDeduction;
 
     const tax = upfrontProfit * 0.2;
     const netProfit = upfrontProfit - tax;
     const netProfitRate = (netProfit / principal) * 100;
 
     setResult({
+      poundValue,
+      actualDeduction,
       upfrontProfit,
       tax,
       netProfit,
@@ -103,6 +107,15 @@ export default function TreasuryBillsCalculatorClient() {
       {/* Results */}
       {result && (
         <Card className="p-4 space-y-3 text-sm">
+          <div className="flex justify-between">
+            <span>القيمة الحالية للجنيه</span>
+            <strong>{result.poundValue.toFixed(5)} جنيه</strong>
+          </div>
+          <div className="flex justify-between">
+            <span>المبلغ المخصوم فعلياspan>
+            <strong>{result.actualDeduction.toFixed(2)} جنيه</strong>
+          </div>
+          
           <div className="flex justify-between">
             <span>الأرباح المصروفة مقدّمًا</span>
             <strong>{result.upfrontProfit.toFixed(2)} جنيه</strong>

@@ -112,7 +112,7 @@ export default function TreasuryBillsCalculatorClient() {
             <strong>{result.poundValue.toFixed(5)} جنيه</strong>
           </div>
           <div className="flex justify-between">
-            <span>المبلغ المخصوم فعلياspan>
+            <span>المبلغ المخصوم فعليا</span>
             <strong>{result.actualDeduction.toFixed(2)} جنيه</strong>
           </div>
           

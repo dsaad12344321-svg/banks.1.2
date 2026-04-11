@@ -132,7 +132,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
 
           <div className="flex justify-between">
-            <span>نسبة صافي الربح</span>
+            <span>عائد الاستثمار</span>
             <strong>{result.netProfitRate.toFixed(2)}%</strong>
           </div>
         </Card>

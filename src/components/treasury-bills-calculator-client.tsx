@@ -108,6 +108,10 @@ export default function TreasuryBillsCalculatorClient() {
       {result && (
         <Card className="p-4 space-y-3 text-sm">
           <div className="flex justify-between">
+            <span>القيمة الاسمية(المبلغ المحجوز)</span>
+            <strong>{result.principal} جنيه</strong>
+          </div>
+          <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>
             <strong>{result.poundValue.toFixed(5)} جنيه</strong>
           </div>

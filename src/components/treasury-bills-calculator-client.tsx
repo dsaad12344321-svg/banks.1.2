@@ -109,7 +109,7 @@ export default function TreasuryBillsCalculatorClient() {
         <Card className="p-4 space-y-3 text-sm">
           <div className="flex justify-between">
             <span>القيمة الاسمية(المبلغ المحجوز)</span>
-            <strong>{amount} جنيه</strong>
+            <strong>{Number(amount).toLocaleString()} جنيه</strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>

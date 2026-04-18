@@ -51,7 +51,7 @@ export default function TreasuryBillsCalculatorClient() {
     const tax = upfrontProfit * 0.2;
     const netProfit = upfrontProfit - tax;
     const netProfitRate = (netProfit / principal) * 100;
-
+    const principalMinusTax=principal-tax;
     setResult({
       poundValue,
       actualDeduction,
@@ -117,27 +117,30 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
             <div className="flex justify-between">
             <span>مدة أذون الخزانة بالأيام</span>
-            <strong>يوم {DAYS_MAP[duration]}</strong>
+            <strong> {DAYS_MAP[duration]} يوم</strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>
             <strong>{result.poundValue.toFixed(5)} جنيه</strong>
           </div>
           <div className="flex justify-between">
-            <span>المبلغ اللى هيتخصم لتنفيذ الشراء</span>
+            <span>لتنفيذ الشراء يخصم</span>
             <strong>{result.actualDeduction.toFixed(2)} جنيه</strong>
           </div>
           
           <div className="flex justify-between">
-            <span>المبلغ اللى هيرجع فى حسابك بعد الشراء بأيام</span>
+            <span>بعد أيام هتسترد</span>
             <strong>{result.upfrontProfit.toFixed(2)} جنيه</strong>
           </div>
 
           <div className="flex justify-between">
-            <span>الضرائب ٪20 تخصم فى نهاية المدة</span>
+            <span>الضرائب ٪20 </span>
             <strong>{result.tax.toFixed(2)} جنيه</strong>
           </div>
-
+          <div className="flex justify-between">
+            <span>هتسترد بعد نهاية المدة</span>
+            <strong>{Number(principalMinusTax).toFixed(2)} جنيه</strong>
+          </div>
           <div className="flex justify-between">
             <span>صافي الربح بعد نهاية المدة</span>
             <strong>{result.netProfit.toFixed(2)} جنيه</strong>

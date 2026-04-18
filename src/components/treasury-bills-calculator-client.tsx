@@ -59,6 +59,7 @@ export default function TreasuryBillsCalculatorClient() {
       tax,
       netProfit,
       netProfitRate,
+      principalMinusTax,
     });
   }
 
@@ -139,7 +140,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
           <div className="flex justify-between">
             <span>هتسترد بعد نهاية المدة</span>
-            <strong>{Number(principalMinusTax).toFixed(2)} جنيه</strong>
+            <strong>{result.principalMinusTax.toFixed(2)} جنيه</strong>
           </div>
           <div className="flex justify-between">
             <span>صافي الربح بعد نهاية المدة</span>

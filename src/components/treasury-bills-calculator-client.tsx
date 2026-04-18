@@ -112,6 +112,10 @@ export default function TreasuryBillsCalculatorClient() {
             <strong>{Number(amount).toLocaleString()} جنيه</strong>
           </div>
           <div className="flex justify-between">
+            <span>متوسط سعر العائد</span>
+            <strong>{Number(rate).toLocaleString()} جنيه</strong>
+          </div>
+          <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>
             <strong>{result.poundValue.toFixed(5)} جنيه</strong>
           </div>

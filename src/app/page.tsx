@@ -1,14 +1,14 @@
 import Script from 'next/script';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import CalculatorClient from '@/components/calculator-client';
-import BanksDisplay from '@/components/banks-display';
+import BanksAccordion from '@/components/BanksAccordion';
 import FooterClient from '@/components/footer-client';
 import FAQAccordion from '@/components/faq-accordion';
 import {
   generateSEOMetadata,
   generateBankCalculatorStructuredData,
   generateFAQStructuredData,
-  generateBreadcrumbStructuredData,
+  gener9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8,
   SITE_URL,
 } from '@/lib/seo';
 import Image from 'next/image';
@@ -176,7 +176,7 @@ export default async function Home() {
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={generateBreadcrumbStructuredData(
+        dangerouslySetInnerHTML={gener9yMnTm4NSzvG9rrwjM2ec8xZgh1cafXH8(
           breadcrumbItems
         )}
       />
@@ -240,11 +240,13 @@ export default async function Home() {
               قائمة البنوك
             </h2>
 
-            <BanksDisplay
-              banks={banks}
-              loading={loading}
-              error={error}
-            />
+              {loading ? (
+                <p className="text-center">جاري التحميل...</p>
+              ) : error ? (
+                <p className="text-center text-red-500">{error}</p>
+              ) : (
+                <BanksAccordion banks={banks} />
+              )}
           </section>
 
           {/* Calculator */}

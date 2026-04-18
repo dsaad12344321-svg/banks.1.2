@@ -90,10 +90,10 @@ export default function TreasuryBillsCalculatorClient() {
             <SelectValue placeholder="اختر المدة" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="3">3 شهور</SelectItem>
-            <SelectItem value="6">6 شهور</SelectItem>
-            <SelectItem value="9">9 شهور</SelectItem>
-            <SelectItem value="11">11 شهر</SelectItem>
+            <SelectItem value="3">  ٣ شهور</SelectItem>
+            <SelectItem value="6"> ٦ شهور</SelectItem>
+            <SelectItem value="9">٩ شهور</SelectItem>
+            <SelectItem value="11">١١ شهر</SelectItem>
             <SelectItem value="12">سنة</SelectItem>
           </SelectContent>
         </Select>
@@ -117,7 +117,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
             <div className="flex justify-between">
             <span>مدة أذون الخزانة بالأيام</span>
-            <strong>{Number(duration).toLocaleString()}% </strong>
+            <strong> يوم {DAYS_MAP[duration]} </strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>

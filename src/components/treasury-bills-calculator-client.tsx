@@ -117,24 +117,24 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
             <div className="flex justify-between">
             <span>مدة أذون الخزانة بالأيام</span>
-            <strong>يوم{DAYS_MAP[duration]}</strong>
+            <strong>يوم {DAYS_MAP[duration]}</strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>
             <strong>{result.poundValue.toFixed(5)} جنيه</strong>
           </div>
           <div className="flex justify-between">
-            <span>المبلغ المخصوم فعليا</span>
+            <span>المبلغ اللى هيتخصم لتنفيذ الشراء</span>
             <strong>{result.actualDeduction.toFixed(2)} جنيه</strong>
           </div>
           
           <div className="flex justify-between">
-            <span>الأرباح المصروفة مقدّمًا</span>
+            <span>المبلغ اللى هيرجع فى حسابك بعد الشراء بأيام</span>
             <strong>{result.upfrontProfit.toFixed(2)} جنيه</strong>
           </div>
 
           <div className="flex justify-between">
-            <span>الضرائب (20%)</span>
+            <span>الضرائب ٪20 تخصم فى نهاية المدة</span>
             <strong>{result.tax.toFixed(2)} جنيه</strong>
           </div>
 

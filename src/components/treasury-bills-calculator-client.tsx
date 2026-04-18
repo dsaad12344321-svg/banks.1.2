@@ -51,6 +51,7 @@ export default function TreasuryBillsCalculatorClient() {
     const tax = upfrontProfit * 0.2;
     const netProfit = upfrontProfit - tax;
     const netProfitRate = (netProfit / principal) * 100;
+    const actualNetProfitRate = (netProfit / actualDeduction) * 100;
     const principalMinusTax=principal-tax;
     setResult({
       poundValue,
@@ -59,6 +60,7 @@ export default function TreasuryBillsCalculatorClient() {
       tax,
       netProfit,
       netProfitRate,
+      actualNetProfitRate,
       principalMinusTax,
     });
   }
@@ -148,8 +150,12 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
 
           <div className="flex justify-between">
-            <span>عائد الاستثمار</span>
+            <span>صافى الربح/القيمة الأسمية</span>
             <strong>{result.netProfitRate.toFixed(2)}%</strong>
+          </div>
+            <div className="flex justify-between">
+            <span>صافى الربح/المبلغ المخصوم</span>
+            <strong>{result.actualNetProfitRate.toFixed(2)}%</strong>
           </div>
         </Card>
       )}

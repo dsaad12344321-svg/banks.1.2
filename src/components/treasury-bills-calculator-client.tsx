@@ -117,7 +117,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
             <div className="flex justify-between">
             <span>مدة أذون الخزانة بالأيام</span>
-            <strong> يوم {DAYS_MAP[duration]} </strong>
+            <strong>{DAYS_MAP[duration]}يوم</strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>

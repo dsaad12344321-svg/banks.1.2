@@ -113,7 +113,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
           <div className="flex justify-between">
             <span>متوسط سعر العائد</span>
-            <strong>{Number(rate).toLocaleString()} جنيه</strong>
+            <strong>{Number(rate).toLocaleString()}% </strong>
           </div>
           <div className="flex justify-between">
             <span>القيمة الحالية للجنيه</span>

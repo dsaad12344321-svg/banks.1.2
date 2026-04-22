@@ -34,8 +34,8 @@
           "returnType": "graduated",
           "graduatedRates": {
             "year1": 20.5,
-            "year2": 16.25,
-            "year3": 12.25
+            "year2": 17,
+            "year3": 13.5
           },
           "type": "monthly",
           "minAmount": 1000,
@@ -46,28 +46,7 @@
             "عائد متدرج"
           ]
         },
-        {
-          "id": "cert-1767237416478",
-          "name": "شهادة ابن مصر الثلاثية المتناقصة عائد سنوى",
-          "duration": 36,
-          "interestRate": 15,
-          "returnType": "graduated",
-          "graduatedRates": {
-            "year1": 22,
-            "year2": 17.5,
-            "year3": 13.25
-          },
-          "type": "annual",
-          "minAmount": 1000,
-          "description": "شهادة ادخار لمدة 3 سنوات بعائد متناقص تبدأ من 22% في السنة الأولى",
-          "features": [
-            "فائدة سنوية",
-            "3سنوات",
-            "عائدمتناقص"
-          ]
-        }
-      ]
-    },
+
     {
       "id": "National bank of Egypt",
       "name": "البنك الأهلي المصري",

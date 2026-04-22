@@ -119,16 +119,16 @@
           "id": "nbe-3-year",
           "name": "الشهادة البلاتينيه 3 سنوات",
           "duration": 36,
-          "interestRate": 16,
+          "interestRate": 17.25,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 16,
-            "year2": 16,
-            "year3": 16
+            "year1": 17.25,
+            "year2": 17.25,
+            "year3": 17.25
           },
           "type": "monthly",
           "minAmount": 1000,
-          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 16%",
+          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.25%",
           "features": [
             "عائد ثابت",
             "3 سنوات",

@@ -45,10 +45,11 @@
             "3 سنوات",
             "عائد متدرج"
           ]
-        },
-
+        }
+      ]
+    },
     {
-      "id": "National bank of Egypt",
+      "id": "national-bank-of-egypt",
       "name": "البنك الأهلي المصري",
       "logo": "/elahly.png",
       "certificates": [

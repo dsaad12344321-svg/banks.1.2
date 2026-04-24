@@ -158,7 +158,7 @@ export default function CalculatorClient({ banks, loading, error }: { banks: Ban
                   <div className="flex flex-col">
                     <span className="font-medium">{cert.name}</span>
                     <span className="text-sm text-muted-foreground">
-                     سنوات {cert.duration / 12}  • % {
+                     سنوات {cert.duration / 12}  •  {
                         cert.returnType === 'graduated' && cert.graduatedRates 
                           ? Math.max(cert.graduatedRates.year1, cert.graduatedRates.year2, cert.graduatedRates.year3) 
                           : cert.interestRate

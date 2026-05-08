@@ -128,12 +128,14 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
           <div className="flex justify-between">
             <span>لتنفيذ الشراء يخصم</span>
-            <strong>{result.actualDeduction.toFixed(2)} جنيه</strong>
+            <strong className="text-red-600">
+{result.actualDeduction.toFixed(2)} جنيه</strong>
           </div>
           
           <div className="flex justify-between">
             <span>يوم الاصدار هتسترد</span>
-            <strong>{result.upfrontProfit.toFixed(2)} جنيه</strong>
+            <strong className="text-green-600">
+{result.upfrontProfit.toFixed(2)} جنيه</strong>
           </div>
 
           <div className="flex justify-between">

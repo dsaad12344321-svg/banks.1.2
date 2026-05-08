@@ -146,7 +146,8 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
           <div className="flex justify-between">
             <span>صافي الربح بعد نهاية المدة</span>
-            <strong>{result.netProfit.toFixed(2)} جنيه</strong>
+            <strong className="text-green-600">
+{result.netProfit.toFixed(2)} جنيه</strong>
           </div>
 
           <div className="flex justify-between">

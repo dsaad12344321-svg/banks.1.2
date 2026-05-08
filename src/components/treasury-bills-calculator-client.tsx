@@ -132,7 +132,7 @@ export default function TreasuryBillsCalculatorClient() {
           </div>
           
           <div className="flex justify-between">
-            <span>بعد أيام هتسترد</span>
+            <span>يوم الاصدار هتسترد</span>
             <strong>{result.upfrontProfit.toFixed(2)} جنيه</strong>
           </div>
 

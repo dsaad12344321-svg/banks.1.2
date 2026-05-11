@@ -34,8 +34,8 @@
           "returnType": "graduated",
           "graduatedRates": {
             "year1": 20.5,
-            "year2": 17,
-            "year3": 13.5
+            "year2": 16.25,
+            "year3": 12.25
           },
           "type": "monthly",
           "minAmount": 1000,

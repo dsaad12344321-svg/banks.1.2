@@ -9,12 +9,12 @@
           "id": "cert-1765597439987",
           "name": "شھادة القمة",
           "duration": 36,
-          "interestRate": 17,
+          "interestRate": 17.25,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17,
-            "year2": 17,
-            "year3": 17
+            "year1": 17.25,
+            "year2": 17.25,
+            "year3": 17.25
           },
           "type": "monthly",
           "minAmount": 1000,

@@ -61,7 +61,7 @@ export default function TreasuryBillsPage() {
           </p>
           <p>
             يتم احتساب ضريبة قدرها <strong>20%</strong> على الأرباح
-            المصروفة مقدّمًا، ويتم خصمها عند الاستحقاق.
+            ، ويتم خصمها عند الاستحقاق.
           </p>
         </section>
 

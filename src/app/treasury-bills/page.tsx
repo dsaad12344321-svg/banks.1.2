@@ -43,7 +43,7 @@ export default function TreasuryBillsPage() {
                 حاسبة أرباح أذون الخزانة
               </CardTitle>
               <CardDescription>
-                الأرباح تُصرف مقدّمًا، والضرائب تُخصم في نهاية المدة
+                      
               </CardDescription>
             </CardHeader>
             <CardContent>

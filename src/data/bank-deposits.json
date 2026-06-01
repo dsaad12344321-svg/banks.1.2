@@ -1,0 +1,26 @@
+{
+  "banks": [
+    {
+      "id": "banque-misr",
+      "name": "بنك مصر",
+      "logo": "/banks/banque-misr.png",
+      "deposits": [
+        {
+          "id": "deposit-6m",
+          "name": "وديعة 6 أشهر",
+          "duration": 6,
+          "interestRate": 16,
+          "returnType": "fixed",
+          "type": "monthly",
+          "minAmount": 1000,
+          "description": "وديعة لمدة 6 أشهر بعائد 16% سنوياً يصرف شهرياً",
+          "features": [
+            "مدة 6 أشهر",
+            "عائد 16%",
+            "صرف شهري"
+          ]
+        }
+      ]
+    }
+  ]
+}

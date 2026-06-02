@@ -57,6 +57,29 @@ function calculateExample(
         deposit.duration,
     };
   }
+  if (deposit.type === 'upfront') {
+  const total =
+    principal *
+    (deposit.interestRate / 100) *
+    (deposit.duration / 12);
+
+  return {
+    type: 'upfront',
+    total,
+  };
+}
+
+if (deposit.type === 'maturity') {
+  const total =
+    principal *
+    (deposit.interestRate / 100) *
+    (deposit.duration / 12);
+
+  return {
+    type: 'maturity',
+    total,
+  };
+}
 
   if (deposit.type === 'quarterly') {
     const quarterly =

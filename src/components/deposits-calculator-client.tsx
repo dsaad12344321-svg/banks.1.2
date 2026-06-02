@@ -34,69 +34,69 @@ interface Props {
 export default function DepositsCalculatorClient({
   banks,
 }: Props) {
-  const [selectedBank, setSelectedBank] =
-    useState("");
-
-  const [selectedDeposit, setSelectedDeposit] =
-    useState("");
-
-  const [amount, setAmount] =
-    useState("100000");
+  const [selectedBank, setSelectedBank] = useState("");
+  const [selectedDeposit, setSelectedDeposit] = useState("");
+  const [amount, setAmount] = useState("100000");
 
   const [result, setResult] = useState<{
-    monthlyProfit: number;
+    periodicProfit: number;
     totalProfit: number;
     totalAmount: number;
   } | null>(null);
 
-  const availableDeposits =
-    selectedBank
-      ? banks.find(
-          (bank) =>
-            bank.id === selectedBank
-        )?.deposits || []
-      : [];
+  const availableDeposits = selectedBank
+    ? banks.find((bank) => bank.id === selectedBank)?.deposits || []
+    : [];
 
   const calculateProfit = () => {
-    if (
-      !selectedBank ||
-      !selectedDeposit ||
-      !amount
-    ) {
-      return;
-    }
+    if (!selectedBank || !selectedDeposit || !amount) return;
 
-    const bank = banks.find(
-      (b) => b.id === selectedBank
-    );
-
-    const deposit =
-      bank?.deposits.find(
-        (d) => d.id === selectedDeposit
-      );
-
+    const bank = banks.find((b) => b.id === selectedBank);
+    const deposit = bank?.deposits.find((d) => d.id === selectedDeposit);
     if (!deposit) return;
 
-    const principal =
-      parseFloat(amount);
+    const principal = parseFloat(amount);
 
-    const monthlyProfit =
-      (principal *
-        deposit.interestRate) /
-      100 /
-      12;
+    let periodicProfit = 0;
+    let totalProfit = 0;
 
-    const totalProfit =
-      monthlyProfit *
-      deposit.duration;
+    switch (deposit.type) {
+      case "monthly":
+        periodicProfit = (principal * deposit.interestRate) / 100 / 12;
+        totalProfit = periodicProfit * deposit.duration;
+        break;
 
-    const totalAmount =
-      principal + totalProfit;
+      case "quarterly":
+        periodicProfit = (principal * deposit.interestRate) / 100 / 4;
+        totalProfit = periodicProfit * (deposit.duration / 3);
+        break;
+
+      case "annual":
+        periodicProfit = (principal * deposit.interestRate) / 100;
+        totalProfit = periodicProfit * (deposit.duration / 12);
+        break;
+
+      case "upfront":
+        totalProfit =
+          principal *
+          (deposit.interestRate / 100) *
+          (deposit.duration / 12);
+        periodicProfit = totalProfit;
+        break;
+
+      case "maturity":
+        totalProfit =
+          principal *
+          (deposit.interestRate / 100) *
+          (deposit.duration / 12);
+        periodicProfit = totalProfit;
+        break;
+    }
 
     setResult({
-      monthlyProfit,
+      periodicProfit,
       totalProfit,
-      totalAmount,
+      totalAmount: principal + totalProfit,
     });
   };
 
@@ -109,30 +109,16 @@ export default function DepositsCalculatorClient({
 
   return (
     <div className="space-y-6">
-
       <div className="grid md:grid-cols-2 gap-4">
-
         <div className="space-y-2">
-          <Label>
-            اختر البنك
-          </Label>
-
-          <Select
-            value={selectedBank}
-            onValueChange={
-              setSelectedBank
-            }
-          >
+          <Label>اختر البنك</Label>
+          <Select value={selectedBank} onValueChange={setSelectedBank}>
             <SelectTrigger>
               <SelectValue placeholder="اختر البنك" />
             </SelectTrigger>
-
             <SelectContent>
               {banks.map((bank) => (
-                <SelectItem
-                  key={bank.id}
-                  value={bank.id}
-                >
+                <SelectItem key={bank.id} value={bank.id}>
                   {bank.name}
                 </SelectItem>
               ))}
@@ -141,156 +127,99 @@ export default function DepositsCalculatorClient({
         </div>
 
         <div className="space-y-2">
-          <Label>
-            اختر الوديعة
-          </Label>
-
+          <Label>اختر الوديعة</Label>
           <Select
             value={selectedDeposit}
-            onValueChange={
-              setSelectedDeposit
-            }
+            onValueChange={setSelectedDeposit}
             disabled={!selectedBank}
           >
             <SelectTrigger>
               <SelectValue placeholder="اختر الوديعة" />
             </SelectTrigger>
-
             <SelectContent>
-              {availableDeposits.map(
-                (deposit) => (
-                  <SelectItem
-                    key={deposit.id}
-                    value={deposit.id}
-                  >
-                    {deposit.name}
-                  </SelectItem>
-                )
-              )}
+              {availableDeposits.map((deposit) => (
+                <SelectItem key={deposit.id} value={deposit.id}>
+                  {deposit.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-
       </div>
 
       <div className="space-y-2">
-        <Label>
-          مبلغ الاستثمار
-        </Label>
-
+        <Label>مبلغ الاستثمار</Label>
         <Input
           type="number"
           value={amount}
-          onChange={(e) =>
-            setAmount(
-              e.target.value
-            )
-          }
+          onChange={(e) => setAmount(e.target.value)}
         />
       </div>
 
       <div className="flex gap-4">
-
-        <Button
-          className="flex-1"
-          onClick={
-            calculateProfit
-          }
-        >
+        <Button className="flex-1" onClick={calculateProfit}>
           <Calculator className="w-4 h-4 ml-2" />
           حساب الأرباح
         </Button>
 
-        <Button
-          variant="outline"
-          onClick={reset}
-        >
+        <Button variant="outline" onClick={reset}>
           إعادة تعيين
         </Button>
-
       </div>
 
-      {result &&
-        selectedBank &&
-        selectedDeposit &&
-        (() => {
-          const bank =
-            banks.find(
-              (b) =>
-                b.id ===
-                selectedBank
-            );
+      {result && selectedBank && selectedDeposit && (() => {
+        const bank = banks.find((b) => b.id === selectedBank);
+        const deposit = bank?.deposits.find((d) => d.id === selectedDeposit);
+        if (!deposit) return null;
 
-          const deposit =
-            bank?.deposits.find(
-              (d) =>
-                d.id ===
-                selectedDeposit
-            );
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                نتيجة الحساب
+              </CardTitle>
+            </CardHeader>
 
-          if (!deposit)
-            return null;
+            <CardContent className="space-y-4">
+              <div className="text-center p-4 border rounded-lg">
+                <p>
+                  {deposit.type === "monthly"
+                    ? "الربح الشهري"
+                    : deposit.type === "quarterly"
+                    ? "الربح ربع السنوي"
+                    : deposit.type === "annual"
+                    ? "الربح السنوي"
+                    : deposit.type === "upfront"
+                    ? "العائد المقدم"
+                    : "العائد عند الاستحقاق"}
+                </p>
 
-          return (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  نتيجة الحساب
-                </CardTitle>
-              </CardHeader>
+                <p className="text-2xl font-bold text-green-600">
+                  {result.periodicProfit.toLocaleString("ar-EG", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  ج.م
+                </p>
+              </div>
 
-              <CardContent className="space-y-4">
+              <div className="text-center p-4 border rounded-lg">
+                <p>إجمالي الربح</p>
+                <p className="text-2xl font-bold">
+                  {result.totalProfit.toLocaleString("ar-EG")} ج.م
+                </p>
+              </div>
 
-                <div className="text-center p-4 border rounded-lg">
-                  <p>
-                    الربح الشهري
-                  </p>
-
-                  <p className="text-2xl font-bold text-green-600">
-                    {result.monthlyProfit.toLocaleString(
-                      "ar-EG",
-                      {
-                        maximumFractionDigits: 2,
-                      }
-                    )}
-                    {" "}
-                    ج.م
-                  </p>
-                </div>
-
-                <div className="text-center p-4 border rounded-lg">
-                  <p>
-                    إجمالي الربح
-                  </p>
-
-                  <p className="text-2xl font-bold">
-                    {result.totalProfit.toLocaleString(
-                      "ar-EG"
-                    )}
-                    {" "}
-                    ج.م
-                  </p>
-                </div>
-
-                <div className="text-center p-4 border rounded-lg">
-                  <p>
-                    الإجمالي النهائي
-                  </p>
-
-                  <p className="text-2xl font-bold text-primary">
-                    {result.totalAmount.toLocaleString(
-                      "ar-EG"
-                    )}
-                    {" "}
-                    ج.م
-                  </p>
-                </div>
-
-              </CardContent>
-            </Card>
-          );
-        })()}
+              <div className="text-center p-4 border rounded-lg">
+                <p>الإجمالي النهائي</p>
+                <p className="text-2xl font-bold text-primary">
+                  {result.totalAmount.toLocaleString("ar-EG")} ج.م
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }

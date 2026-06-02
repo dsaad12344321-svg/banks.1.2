@@ -3,7 +3,7 @@
     {
       "id": "banque-misr",
       "name": "بنك مصر",
-      "logo": "/banks/banque-misr.png",
+      "logo": "/misr.png",
       "deposits": [
         {
           "id": "deposit-6m",

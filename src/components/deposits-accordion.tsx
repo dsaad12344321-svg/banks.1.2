@@ -28,6 +28,8 @@ const payoutMap = {
   monthly: 'شهري',
   quarterly: 'ربع سنوي',
   annual: 'سنوي',
+  upfront: 'مقدم',
+  maturity: 'نهاية المدة',
 };
 
 /* =========================

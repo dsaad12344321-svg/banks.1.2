@@ -3,10 +3,20 @@ export interface Deposit {
   name: string;
   duration: number;
   interestRate: number;
-  returnType: 'fixed';
-  type: 'monthly' | 'quarterly' | 'annual';
+
+  returnType: "fixed";
+
+  type:
+    | "monthly"
+    | "quarterly"
+    | "annual"
+    | "upfront"
+    | "maturity";
+
   minAmount: number;
+
   description: string;
+
   features: string[];
 }
 

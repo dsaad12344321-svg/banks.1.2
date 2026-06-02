@@ -6,6 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Calculator, TrendingUp } from "lucide-react";
+
 import type { Bank } from "@/types/deposits";
 
 interface Props {
@@ -17,7 +34,14 @@ interface Props {
 export default function DepositsCalculatorClient({
   banks,
 }: Props) {
-  const [amount, setAmount] = useState("100000");
+  const [selectedBank, setSelectedBank] =
+    useState("");
+
+  const [selectedDeposit, setSelectedDeposit] =
+    useState("");
+
+  const [amount, setAmount] =
+    useState("100000");
 
   const [result, setResult] = useState<{
     monthlyProfit: number;
@@ -25,20 +49,46 @@ export default function DepositsCalculatorClient({
     totalAmount: number;
   } | null>(null);
 
+  const availableDeposits =
+    selectedBank
+      ? banks.find(
+          (bank) =>
+            bank.id === selectedBank
+        )?.deposits || []
+      : [];
+
   const calculateProfit = () => {
-    const deposit = banks?.[0]?.deposits?.[0];
+    if (
+      !selectedBank ||
+      !selectedDeposit ||
+      !amount
+    ) {
+      return;
+    }
+
+    const bank = banks.find(
+      (b) => b.id === selectedBank
+    );
+
+    const deposit =
+      bank?.deposits.find(
+        (d) => d.id === selectedDeposit
+      );
 
     if (!deposit) return;
 
-    const principal = Number(amount);
+    const principal =
+      parseFloat(amount);
 
     const monthlyProfit =
-      (principal * deposit.interestRate) /
+      (principal *
+        deposit.interestRate) /
       100 /
       12;
 
     const totalProfit =
-      monthlyProfit * deposit.duration;
+      monthlyProfit *
+      deposit.duration;
 
     const totalAmount =
       principal + totalProfit;
@@ -50,69 +100,197 @@ export default function DepositsCalculatorClient({
     });
   };
 
+  const reset = () => {
+    setSelectedBank("");
+    setSelectedDeposit("");
+    setAmount("100000");
+    setResult(null);
+  };
+
   return (
     <div className="space-y-6">
 
+      <div className="grid md:grid-cols-2 gap-4">
+
+        <div className="space-y-2">
+          <Label>
+            اختر البنك
+          </Label>
+
+          <Select
+            value={selectedBank}
+            onValueChange={
+              setSelectedBank
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="اختر البنك" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {banks.map((bank) => (
+                <SelectItem
+                  key={bank.id}
+                  value={bank.id}
+                >
+                  {bank.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label>
+            اختر الوديعة
+          </Label>
+
+          <Select
+            value={selectedDeposit}
+            onValueChange={
+              setSelectedDeposit
+            }
+            disabled={!selectedBank}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="اختر الوديعة" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {availableDeposits.map(
+                (deposit) => (
+                  <SelectItem
+                    key={deposit.id}
+                    value={deposit.id}
+                  >
+                    {deposit.name}
+                  </SelectItem>
+                )
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+
+      </div>
+
       <div className="space-y-2">
-        <Label htmlFor="amount">
+        <Label>
           مبلغ الاستثمار
         </Label>
 
         <Input
-          id="amount"
           type="number"
           value={amount}
           onChange={(e) =>
-            setAmount(e.target.value)
+            setAmount(
+              e.target.value
+            )
           }
         />
       </div>
 
-      <Button
-        onClick={calculateProfit}
-        className="w-full"
-      >
-        حساب الأرباح
-      </Button>
+      <div className="flex gap-4">
 
-      {result && (
-        <div className="border rounded-lg p-4 space-y-3">
+        <Button
+          className="flex-1"
+          onClick={
+            calculateProfit
+          }
+        >
+          <Calculator className="w-4 h-4 ml-2" />
+          حساب الأرباح
+        </Button>
 
-          <div>
-            <strong>الربح الشهري:</strong>{" "}
-            {result.monthlyProfit.toLocaleString(
-              "ar-EG",
-              {
-                maximumFractionDigits: 2,
-              }
-            )}{" "}
-            ج.م
-          </div>
+        <Button
+          variant="outline"
+          onClick={reset}
+        >
+          إعادة تعيين
+        </Button>
 
-          <div>
-            <strong>إجمالي الربح:</strong>{" "}
-            {result.totalProfit.toLocaleString(
-              "ar-EG",
-              {
-                maximumFractionDigits: 2,
-              }
-            )}{" "}
-            ج.م
-          </div>
+      </div>
 
-          <div>
-            <strong>الإجمالي النهائي:</strong>{" "}
-            {result.totalAmount.toLocaleString(
-              "ar-EG",
-              {
-                maximumFractionDigits: 2,
-              }
-            )}{" "}
-            ج.م
-          </div>
+      {result &&
+        selectedBank &&
+        selectedDeposit &&
+        (() => {
+          const bank =
+            banks.find(
+              (b) =>
+                b.id ===
+                selectedBank
+            );
 
-        </div>
-      )}
+          const deposit =
+            bank?.deposits.find(
+              (d) =>
+                d.id ===
+                selectedDeposit
+            );
+
+          if (!deposit)
+            return null;
+
+          return (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  نتيجة الحساب
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+
+                <div className="text-center p-4 border rounded-lg">
+                  <p>
+                    الربح الشهري
+                  </p>
+
+                  <p className="text-2xl font-bold text-green-600">
+                    {result.monthlyProfit.toLocaleString(
+                      "ar-EG",
+                      {
+                        maximumFractionDigits: 2,
+                      }
+                    )}
+                    {" "}
+                    ج.م
+                  </p>
+                </div>
+
+                <div className="text-center p-4 border rounded-lg">
+                  <p>
+                    إجمالي الربح
+                  </p>
+
+                  <p className="text-2xl font-bold">
+                    {result.totalProfit.toLocaleString(
+                      "ar-EG"
+                    )}
+                    {" "}
+                    ج.م
+                  </p>
+                </div>
+
+                <div className="text-center p-4 border rounded-lg">
+                  <p>
+                    الإجمالي النهائي
+                  </p>
+
+                  <p className="text-2xl font-bold text-primary">
+                    {result.totalAmount.toLocaleString(
+                      "ar-EG"
+                    )}
+                    {" "}
+                    ج.م
+                  </p>
+                </div>
+
+              </CardContent>
+            </Card>
+          );
+        })()}
     </div>
   );
 }

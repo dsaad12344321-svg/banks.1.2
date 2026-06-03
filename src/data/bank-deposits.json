@@ -36,35 +36,7 @@
             "الحد الأدنى 100,000 جنيه",
             "عائد شهري 1,333.33 جنيه لكل 100,000 جنيه"
           ]
-        },
-        {
-  "id": "advance-deposit",
-  "name": "وديعة بعائد مقدم",
-  "duration": 12,
-  "interestRate": 14,
-  "returnType": "fixed",
-  "type": "upfront",
-  "minAmount": 50000,
-  "description": "عائد يصرف بالكامل مقدماً",
-  "features": [
-    "عائد مقدم",
-    "مدة سنة"
-  ]
-},
-   {
-  "id": "maturity-deposit",
-  "name": "وديعة بعائد آخر المدة",
-  "duration": 12,
-  "interestRate": 18,
-  "returnType": "fixed",
-  "type": "maturity",
-  "minAmount": 1000,
-  "description": "العائد يصرف عند الاستحقاق",
-  "features": [
-    "عائد آخر المدة",
-    "مدة سنة"
-  ]
-}
+        }
 ,
 {
   "id": "flex-plus-6m-maturity",

@@ -119,7 +119,28 @@ export default function DepositsCalculatorClient({
             <SelectContent>
               {banks.map((bank) => (
                 <SelectItem key={bank.id} value={bank.id}>
-                  {bank.name}
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <img 
+                        src={bank.logo} 
+                        alt={`${bank.name} logo`}
+                        className="max-w-full max-h-full object-contain"
+                        onError={(e) => {
+                          // Fallback to emoji if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) {
+                            fallback.style.display = 'block';
+                          }
+                        }}
+                      />
+                      <div className="text-sm" style={{display: 'none'}}>
+                        {bank.id === 'banque-misr' ? '🏦' : '🏛️'}
+                      </div>
+                    </div>
+                    <span>{bank.name}</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

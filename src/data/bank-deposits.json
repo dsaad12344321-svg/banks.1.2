@@ -12,7 +12,7 @@
           "interestRate": 16.5,
           "returnType": "fixed",
           "type": "monthly",
-          "minAmount": 1000,
+          "minAmount": 10000,
           "description": "وديعة لمدة 6 أشهر بعائد 16.5% سنوياً يصرف شهرياً",
           "features": [
             "مدة 6 أشهر",

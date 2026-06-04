@@ -9,6 +9,7 @@ import { useState } from "react";
 const navItems = [
   { name: "شهادات الادخار", href: "/" },
   { name: "أذون الخزانة", href: "/treasury-bills" },
+  { name: "الودائع", href: "/deposits" }
 ];
 
 export default function HeaderClient() {

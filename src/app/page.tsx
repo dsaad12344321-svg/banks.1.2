@@ -64,6 +64,7 @@ export const metadata = generateSEOMetadata({
     'شهادات البنك الأهلي',
     'شهادات بنك مصر',
     'حاسبة اذون الخزانة',
+     'حاسبة الودائع البنكية',
   ],
   ogType: 'website',
   canonical: SITE_URL,
@@ -227,7 +228,7 @@ export default async function Home() {
           <header className="text-center mb-8 pt-8">
 
             <h1 className="text-4xl font-bold text-foreground mb-2">
-              شهادات وودائع البنوك المصرية
+              شهادات ادخار البنوك المصرية
             </h1>
             <p className="text-muted-foreground text-lg">
               استكشف أفضل شهادات الادخار واحسب أرباحك بسهولة

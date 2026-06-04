@@ -7,7 +7,7 @@
       "deposits": [
         {
           "id": "deposit-6m",
-          "name": "وديعة فليكس بلس 6 أشهر",
+          "name": " وديعة فليكس بلس 6 أشهر-عائد شهرى",
           "duration": 6,
           "interestRate": 16.5,
           "returnType": "fixed",
@@ -22,7 +22,7 @@
         },
         {
           "id": "deposit-9m",
-          "name": "وديعة فليكس بلس 9 أشهر",
+          "name": "وديعة فليكس بلس 9 أشهر -عائد شهرى",
           "duration": 9,
           "interestRate": 16,
           "returnType": "fixed",

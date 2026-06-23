@@ -7,7 +7,7 @@
       "certificates": [
         {
           "id": "cert-1765597439987",
-          "name": "شھادة القمة",
+          "name": "شھادة القمة-شهرى",
           "duration": 36,
           "interestRate": 17.75,
           "returnType": "fixed",
@@ -26,6 +26,27 @@
             "استقرار في العائد"
           ]
         },
+{
+  "id": "cert-qemma-quarterly",
+  "name": "شهادة القمة-ربع سنوى",
+  "duration": 36,
+  "interestRate": 17.85,
+  "returnType": "fixed",
+  "graduatedRates": {
+    "year1": 17.85,
+    "year2": 17.85,
+    "year3": 17.85
+  },
+  "type": "quarterly",
+  "minAmount": 1000,
+  "description": "شهادة ادخار لمدة 3 سنوات بعائد ثابت 17.85% يُصرف ربع سنوياً",
+  "features": [
+    "عائد ربع سنوى",
+    "3 سنوات",
+    "عائد ثابت",
+    "استقرار في العائد"
+  ]
+},
         {
           "id": "cert-1765597128970",
           "name": "شهادة ابن مصر الثلاثية المتناقصة عائد شهرى",

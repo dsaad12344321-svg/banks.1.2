@@ -7,7 +7,7 @@
       "certificates": [
         {
           "id": "cert-1765597439987",
-          "name": "شھادة القمة-شهرى",
+          "name": "شھادة القمة-عائد شهرى",
           "duration": 36,
           "interestRate": 17.75,
           "returnType": "fixed",
@@ -28,7 +28,7 @@
         },
 {
   "id": "cert-qemma-quarterly",
-  "name": "شهادة القمة-ربع سنوى",
+  "name": "شهادة القمة-عائد ربع سنوى",
   "duration": 36,
   "interestRate": 17.85,
   "returnType": "fixed",
@@ -144,16 +144,16 @@
           "id": "nbe-3-year",
           "name": "الشهادة البلاتينيه 3 سنوات",
           "duration": 36,
-          "interestRate": 17.25,
+          "interestRate": 17.75,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.25,
-            "year2": 17.25,
-            "year3": 17.25
+            "year1": 17.75,
+            "year2": 17.75,
+            "year3": 17.75
           },
           "type": "monthly",
           "minAmount": 1000,
-          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.25%",
+          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.75%",
           "features": [
             "عائد ثابت",
             "3 سنوات",

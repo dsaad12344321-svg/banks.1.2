@@ -8,8 +8,10 @@ import { useState } from "react";
 
 const navItems = [
   { name: "شهادات الادخار", href: "/" },
+  { name: "الودائع", href: "/deposits" },
   { name: "أذون الخزانة", href: "/treasury-bills" },
-  { name: "الودائع", href: "/deposits" }
+  { name: "القروض", href: "/loans" },
+  
 ];
 
 export default function HeaderClient() {

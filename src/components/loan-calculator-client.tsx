@@ -1,78 +1,209 @@
+"use client";
 
-import type { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import LoanCalculatorClient from "@/components/loan-calculator-client";
-import { SITE_URL, generateSEOMetadata } from "@/lib/seo";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: "حاسبة القروض",
-  description:
-    "احسب القسط الشهري للقروض وجدول السداد وإجمالي الفوائد بطريقة الرصيد المتناقص.",
-  keywords: [
-    "حاسبة القروض",
-    "حساب القسط الشهري",
-    "جدول سداد القرض",
-    "القروض الشخصية",
-    "القرض البنكي",
-    "الرصيد المتناقص",
-    "الفائدة المتناقصة",
-    "EMI Calculator",
-  ],
-  ogType: "website",
-  canonical: `${SITE_URL}/loans`,
-});
+interface ScheduleRow {
+  month: number;
+  payment: number;
+  interest: number;
+  principal: number;
+  balance: number;
+}
 
-export default function LoansPage() {
+export default function LoanCalculatorClient() {
+  const [amount, setAmount] = useState("");
+  const [rate, setRate] = useState("");
+  const [months, setMonths] = useState("");
+
+  const [monthlyPayment, setMonthlyPayment] = useState<number | null>(null);
+  const [totalPaid, setTotalPaid] = useState<number | null>(null);
+  const [totalInterest, setTotalInterest] = useState<number | null>(null);
+  const [schedule, setSchedule] = useState<ScheduleRow[]>([]);
+
+  const calculateLoan = () => {
+    const principal = Number(amount);
+    const annualRate = Number(rate);
+    const duration = Number(months);
+
+    if (
+      !principal ||
+      !annualRate ||
+      !duration ||
+      principal <= 0 ||
+      annualRate <= 0 ||
+      duration <= 0
+    ) {
+      return;
+    }
+
+    const monthlyRate = annualRate / 100 / 12;
+
+    const payment =
+      principal *
+      ((monthlyRate * Math.pow(1 + monthlyRate, duration)) /
+        (Math.pow(1 + monthlyRate, duration) - 1));
+
+    let balance = principal;
+    const rows: ScheduleRow[] = [];
+    let interestSum = 0;
+
+    for (let month = 1; month <= duration; month++) {
+      const interest = balance * monthlyRate;
+      const principalPart = payment - interest;
+
+      balance -= principalPart;
+
+      if (balance < 0) balance = 0;
+
+      interestSum += interest;
+
+      rows.push({
+        month,
+        payment,
+        interest,
+        principal: principalPart,
+        balance,
+      });
+    }
+
+    setMonthlyPayment(payment);
+    setTotalPaid(payment * duration);
+    setTotalInterest(interestSum);
+    setSchedule(rows);
+  };
+
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="space-y-6">
 
-        <header className="text-center mb-10 pt-8">
-          <h1 className="text-4xl font-bold text-foreground mb-3">
-            حاسبة القروض
-          </h1>
+      {/* Inputs */}
+      <div className="grid gap-4">
 
-          <p className="text-muted-foreground text-lg">
-            احسب القسط الشهري وإجمالي الفوائد وجدول السداد بالتفصيل
-          </p>
-        </header>
+        <div>
+          <label className="block mb-2 text-sm font-medium">
+            مبلغ القرض (ج.م)
+          </label>
+          <Input
+            type="number"
+            min="0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="100000"
+          />
+        </div>
 
-        <section className="mb-12">
-          <Card>
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl">
-                حاسبة القرض
-              </CardTitle>
+        <div>
+          <label className="block mb-2 text-sm font-medium">
+            الفائدة السنوية (%)
+          </label>
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            value={rate}
+            onChange={(e) => setRate(e.target.value)}
+            placeholder="20"
+          />
+        </div>
 
-              <CardDescription>
-                أدخل مبلغ القرض والفائدة والمدة لحساب جدول السداد
-              </CardDescription>
-            </CardHeader>
+        <div>
+          <label className="block mb-2 text-sm font-medium">
+            مدة القرض (بالأشهر)
+          </label>
+          <Input
+            type="number"
+            min="1"
+            value={months}
+            onChange={(e) => setMonths(e.target.value)}
+            placeholder="12"
+          />
+        </div>
 
-            <CardContent>
-              <LoanCalculatorClient />
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="text-sm text-muted-foreground leading-relaxed space-y-3">
-          <p>
-            <strong>طريقة الحساب:</strong> تعتمد الحاسبة على نظام
-            الرصيد المتناقص (Reducing Balance).
-          </p>
-
-          <p>
-            يتم احتساب الفائدة على الرصيد المتبقي كل شهر ثم توزيع
-            القسط بين أصل القرض والفائدة.
-          </p>
-
-          <p>
-            تعرض الحاسبة إجمالي الفوائد وإجمالي المدفوعات بالإضافة
-            إلى جدول السداد الكامل.
-          </p>
-        </section>
+        <Button onClick={calculateLoan}>
+          عرض النتائج والجدول
+        </Button>
 
       </div>
+
+      {/* Results */}
+      {monthlyPayment !== null && (
+        <>
+          <div className="rounded-xl border bg-card p-6 text-center space-y-3">
+
+            <div className="text-lg font-semibold">
+              القسط الشهري:
+              {" "}
+              {monthlyPayment.toFixed(2)}
+              {" "}
+              ج.م
+            </div>
+
+            <div className="text-lg font-semibold">
+              إجمالي المبلغ المدفوع:
+              {" "}
+              {totalPaid?.toFixed(2)}
+              {" "}
+              ج.م
+            </div>
+
+            <div className="text-lg font-semibold">
+              إجمالي الفوائد المستحقة:
+              {" "}
+              {totalInterest?.toFixed(2)}
+              {" "}
+              ج.م
+            </div>
+
+          </div>
+
+          {/* Schedule Table */}
+          <div className="overflow-x-auto">
+
+            <table className="w-full border-collapse border text-center">
+
+              <thead>
+                <tr className="bg-primary text-primary-foreground">
+                  <th className="border p-3">م</th>
+                  <th className="border p-3">القسط</th>
+                  <th className="border p-3">الفائدة</th>
+                  <th className="border p-3">أصل القرض</th>
+                  <th className="border p-3">الرصيد المتبقي</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {schedule.map((row) => (
+                  <tr key={row.month}>
+                    <td className="border p-2">
+                      {row.month}
+                    </td>
+
+                    <td className="border p-2">
+                      {row.payment.toFixed(2)}
+                    </td>
+
+                    <td className="border p-2">
+                      {row.interest.toFixed(2)}
+                    </td>
+
+                    <td className="border p-2">
+                      {row.principal.toFixed(2)}
+                    </td>
+
+                    <td className="border p-2">
+                      {row.balance.toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+
+            </table>
+
+          </div>
+        </>
+      )}
+
     </div>
   );
 }

@@ -121,7 +121,7 @@ export default function LoanCalculatorClient() {
         </div>
 
         <Button onClick={calculateLoan}>
-          عرض النتائج والجدول
+          احسب
         </Button>
 
       </div>

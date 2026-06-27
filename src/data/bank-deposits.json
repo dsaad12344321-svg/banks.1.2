@@ -6,7 +6,7 @@
       "logo": "/misr.png",
       "deposits": [
         {
-          "id": "deposit-6m",
+          "id": "dep-6m-m",
           "name": " وديعة فليكس بلس 6 أشهر-عائد شهرى",
           "duration": 6,
           "interestRate": 16.5,
@@ -21,7 +21,7 @@
           ]
         },
         {
-          "id": "deposit-9m",
+          "id": "dep-9m-m",
           "name": "وديعة فليكس بلس 9 أشهر -عائد شهرى",
           "duration": 9,
           "interestRate": 16,
@@ -39,7 +39,7 @@
         }
 ,
 {
-  "id": "flex-plus-6m-maturity",
+  "id": "de-6m-mat",
   "name": "وديعة فليكس بلس 6 أشهر - عائد آخر المدة",
   "duration": 6,
   "interestRate": 17,
@@ -57,7 +57,7 @@
   ]
 },
 {
-  "id": "flex-plus-6m-upfront",
+  "id": "dep-6m-upfront",
   "name": "وديعة فليكس بلس 6 أشهر - عائد مقدم",
   "duration": 6,
   "interestRate": 15.5,
@@ -74,7 +74,7 @@
   ]
 },
 {
-  "id": "flex-plus-9m-upfront",
+  "id": "dep-9m-upfront",
   "name": "وديعة فليكس بلس 9 أشهر - عائد مقدم",
   "duration": 9,
   "interestRate": 15,

@@ -23,7 +23,7 @@ export async function GET(
   }
 
   const certificate = bankData.certificates.find(
-    (c) => c.id === Number(id)
+    (c) => c.id === id
   );
 
   if (!certificate) {

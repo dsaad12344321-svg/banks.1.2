@@ -1,7 +1,7 @@
 {
   "banks": [
     {
-      "id": "banque-misr",
+      "id": "misr",
       "name": "بنك مصر",
       "logo": "/misr.png",
       "certificates": [
@@ -94,7 +94,7 @@
       ]
     },
     {
-      "id": "national-bank-of-egypt",
+      "id": "elahly",
       "name": "البنك الأهلي المصري",
       "logo": "/elahly.png",
       "certificates": [
@@ -256,7 +256,7 @@
       ]
     },
     {
-      "id": "bank-of-cairo",
+      "id": "cairo",
       "name": "بنك القاهرة",
       "logo": "/cairo.png",
       "certificates": [

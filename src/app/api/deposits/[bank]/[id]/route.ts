@@ -22,9 +22,19 @@ export async function GET(
     );
   }
 
-  const certificate = bankData.certificates.find(
-    (c) => c.id === id
-  );
+  let certificate;
+
+  // إذا كان id عبارة عن رقم
+  if (!isNaN(Number(id))) {
+    const index = Number(id) - 1;
+
+    certificate = bankData.certificates[index];
+  } else {
+    // إذا كان id عبارة عن اسم
+    certificate = bankData.certificates.find(
+      (c) => c.id === id
+    );
+  }
 
   if (!certificate) {
     return Response.json(

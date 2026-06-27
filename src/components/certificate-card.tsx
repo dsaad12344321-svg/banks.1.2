@@ -1,376 +1,234 @@
-export type PosterTheme =
-  | "green"
-  | "blue"
-  | "purple"
-  | "orange"
-  | "red";
+"use client";
 
-export type PosterSize =
-  | "post"
-  | "story";
+import Image from "next/image";
 
-export interface Certificate {
-  id: string;
-  name: string;
-  duration: number;
-  interestRate: number;
+import {
+  PosterCertificate,
+  PosterThemeConfig,
+  getPeriodLabel,
+  getReturnTypeLabel,
+} from "@/lib/certificates-poster";
 
-  returnType:
-    | "fixed"
-    | "variable"
-    | "graduated";
+interface CertificateCardProps {
+  certificate: PosterCertificate;
 
-  graduatedRates?: {
-    year1: number;
-    year2: number;
-    year3: number;
-  };
+  theme: PosterThemeConfig;
 
-  type:
-    | "monthly"
-    | "quarterly"
-    | "annual";
-
-  minAmount: number;
-
-  description: string;
-
-  features: string[];
+  showDescription?: boolean;
 }
 
-export interface Bank {
-  id: string;
-  name: string;
-  logo: string;
+export default function CertificateCard({
+  certificate,
+  theme,
+  showDescription = false,
+}: CertificateCardProps) {
+  const isGraduated =
+    certificate.returnType === "graduated" &&
+    certificate.graduatedRates;
 
-  certificates: Certificate[];
-}
+  return (
+    <div
+      className={`
+        rounded-2xl
+        border-2
+        p-5
+        transition-all
+        ${theme.card}
+        ${theme.border}
+        ${theme.shadow}
+      `}
+    >
+      {/* ===========================
+          Bank
+      =========================== */}
 
-/* ===========================================
-   Poster Models
-=========================================== */
+      <div className="mb-5 flex flex-col items-center text-center">
+
+        <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow">
 
-export interface PosterCertificate
-  extends Certificate {
+          <Image
+            src={certificate.bankLogo}
+            alt={certificate.bankName}
+            width={44}
+            height={44}
+          />
 
-  bankId: string;
+        </div>
+
+        <h3
+          className={`text-lg font-bold ${theme.title}`}
+        >
+          {certificate.bankName}
+        </h3>
 
-  bankName: string;
+        <p className="mt-1 text-sm text-muted-foreground">
+          {certificate.name}
+        </p>
 
-  bankLogo: string;
+      </div>
 
-  enabled: boolean;
-}
+      {/* ===========================
+          Interest
+      =========================== */}
 
-export interface PosterBank {
+      <div className="mb-5 text-center">
 
-  id: string;
+        <div
+          className={`text-4xl font-extrabold ${theme.title}`}
+        >
+          {certificate.interestRate}%
+        </div>
 
-  name: string;
+        <div className="mt-1 text-xs text-muted-foreground">
+          سعر العائد
+        </div>
 
-  logo: string;
+      </div>
 
-  certificates: PosterCertificate[];
-}
+      <div className="my-5 border-t" />
 
-export interface PosterSettings {
+      {/* ===========================
+          Details
+      =========================== */}
 
-  issueDate: string;
+      <div className="space-y-3 text-sm">
 
-  theme: PosterTheme;
+        <div className="flex items-center justify-between">
 
-  size: PosterSize;
+          <span>
+            ⏳ المدة
+          </span>
 
-  banks: PosterBank[];
-}
+          <strong>
+            {certificate.duration / 12} سنوات
+          </strong>
 
-/* ===========================================
-   Themes
-=========================================== */
+        </div>
 
-export const POSTER_THEMES = {
+        <div className="flex items-center justify-between">
 
-  green: {
+          <span>
+            💳 دورية الصرف
+          </span>
 
-    name: "أخضر",
+          <strong>
+            {getPeriodLabel(certificate.type)}
+          </strong>
 
-    background:
-      "bg-gradient-to-br from-emerald-50 to-green-100",
+        </div>
 
-    header:
-      "bg-gradient-to-r from-emerald-700 to-green-600",
+        <div className="flex items-center justify-between">
 
-    title:
-      "text-emerald-700",
+          <span>
+            📈 نوع العائد
+          </span>
 
-    card:
-      "bg-white",
+          <strong>
+            {getReturnTypeLabel(
+              certificate.returnType
+            )}
+          </strong>
 
-    border:
-      "border-emerald-200",
+        </div>
 
-    shadow:
-      "shadow-emerald-100",
-  },
+        <div className="flex items-center justify-between">
 
-  blue: {
+          <span>
+            💰 الحد الأدنى
+          </span>
 
-    name: "أزرق",
+          <strong>
+            {certificate.minAmount.toLocaleString(
+              "ar-EG"
+            )}{" "}
+            جنيه
+          </strong>
 
-    background:
-      "bg-gradient-to-br from-sky-50 to-blue-100",
+        </div>
 
-    header:
-      "bg-gradient-to-r from-sky-700 to-blue-600",
+      </div>
+            {/* ===========================
+          Graduated Rates
+      =========================== */}
 
-    title:
-      "text-sky-700",
+      {isGraduated && (
+        <>
+          <div className="my-5 border-t" />
 
-    card:
-      "bg-white",
+          <div className="space-y-2">
 
-    border:
-      "border-sky-200",
+            <h4
+              className={`text-center text-sm font-bold ${theme.title}`}
+            >
+              جدول العائد المتدرج
+            </h4>
 
-    shadow:
-      "shadow-sky-100",
-  },
+            <div className="rounded-xl bg-muted/40 p-3">
 
-  purple: {
+              <div className="flex items-center justify-between py-1">
 
-    name: "بنفسجى",
+                <span>السنة الأولى</span>
 
-    background:
-      "bg-gradient-to-br from-violet-50 to-purple-100",
+                <strong>
+                  {certificate.graduatedRates!.year1}%
+                </strong>
 
-    header:
-      "bg-gradient-to-r from-violet-700 to-purple-600",
+              </div>
 
-    title:
-      "text-violet-700",
+              <div className="border-t my-2" />
 
-    card:
-      "bg-white",
+              <div className="flex items-center justify-between py-1">
 
-    border:
-      "border-violet-200",
+                <span>السنة الثانية</span>
 
-    shadow:
-      "shadow-violet-100",
-  },
+                <strong>
+                  {certificate.graduatedRates!.year2}%
+                </strong>
 
-  orange: {
+              </div>
 
-    name: "برتقالى",
+              <div className="border-t my-2" />
 
-    background:
-      "bg-gradient-to-br from-orange-50 to-amber-100",
+              <div className="flex items-center justify-between py-1">
 
-    header:
-      "bg-gradient-to-r from-orange-700 to-amber-600",
+                <span>السنة الثالثة</span>
 
-    title:
-      "text-orange-700",
+                <strong>
+                  {certificate.graduatedRates!.year3}%
+                </strong>
 
-    card:
-      "bg-white",
+              </div>
 
-    border:
-      "border-orange-200",
+            </div>
 
-    shadow:
-      "shadow-orange-100",
-  },
+          </div>
+        </>
+      )}
 
-  red: {
+      {/* ===========================
+          Description
+      =========================== */}
 
-    name: "أحمر",
+      {showDescription && (
+        <>
+          <div className="my-5 border-t" />
 
-    background:
-      "bg-gradient-to-br from-red-50 to-rose-100",
+          <div>
 
-    header:
-      "bg-gradient-to-r from-red-700 to-rose-600",
+            <h4
+              className={`mb-2 text-sm font-bold ${theme.title}`}
+            >
+              نبذة
+            </h4>
 
-    title:
-      "text-red-700",
+            <p className="text-xs leading-6 text-muted-foreground">
+              {certificate.description}
+            </p>
 
-    card:
-      "bg-white",
+          </div>
+        </>
+      )}
 
-    border:
-      "border-red-200",
-
-    shadow:
-      "shadow-red-100",
-  },
-
-} as const;
-
-/* ===========================================
-   Poster Sizes
-=========================================== */
-
-export const POSTER_SIZES = {
-
-  post: {
-
-    label: "منشور",
-
-    width: 420,
-
-    minHeight: 560,
-  },
-
-  story: {
-
-    label: "ستورى",
-
-    width: 420,
-
-    minHeight: 760,
-  },
-
-} as const;
-
-/* ===========================================
-   Data Helpers
-=========================================== */
-
-export function createPosterBanks(
-  banks: Bank[]
-): PosterBank[] {
-
-  return banks.map((bank) => ({
-
-    id: bank.id,
-
-    name: bank.name,
-
-    logo: bank.logo,
-
-    certificates:
-      bank.certificates.map(
-        (certificate) => ({
-
-          ...certificate,
-
-          bankId: bank.id,
-
-          bankName: bank.name,
-
-          bankLogo: bank.logo,
-
-          enabled: false,
-        })
-      ),
-  }));
-}
-
-export function getEnabledCertificates(
-  banks: PosterBank[]
-): PosterCertificate[] {
-
-  return banks.flatMap((bank) =>
-    bank.certificates.filter(
-      (certificate) =>
-        certificate.enabled
-    )
+    </div>
   );
 }
-/* ===========================================
-   Labels
-=========================================== */
-
-export function getReturnTypeLabel(
-  type: Certificate["returnType"]
-): string {
-  switch (type) {
-    case "fixed":
-      return "ثابت";
-
-    case "graduated":
-      return "متدرج";
-
-    case "variable":
-      return "متغير";
-
-    default:
-      return "";
-  }
-}
-
-export function getPeriodLabel(
-  type: Certificate["type"]
-): string {
-  switch (type) {
-    case "monthly":
-      return "شهرى";
-
-    case "quarterly":
-      return "ربع سنوى";
-
-    case "annual":
-      return "سنوى";
-
-    default:
-      return "";
-  }
-}
-
-/* ===========================================
-   Caption Generator
-=========================================== */
-
-export function generateCaption(
-  date: string,
-  certificates: PosterCertificate[]
-): string {
-  const lines: string[] = [];
-
-  lines.push("🏦 أفضل شهادات الادخار فى البنوك المصرية");
-  lines.push("");
-  lines.push(`📅 تاريخ التحديث: ${date}`);
-  lines.push("");
-
-  certificates.forEach((item) => {
-    lines.push(`🏦 ${item.bankName}`);
-    lines.push(`📌 ${item.name}`);
-    lines.push(`💰 العائد: ${item.interestRate}%`);
-    lines.push(`⏳ المدة: ${item.duration / 12} سنوات`);
-    lines.push(`💳 دورية الصرف: ${getPeriodLabel(item.type)}`);
-    lines.push(`📊 نوع العائد: ${getReturnTypeLabel(item.returnType)}`);
-
-    if (
-      item.returnType === "graduated" &&
-      item.graduatedRates
-    ) {
-      lines.push(
-        `السنة الأولى: ${item.graduatedRates.year1}%`
-      );
-
-      lines.push(
-        `السنة الثانية: ${item.graduatedRates.year2}%`
-      );
-
-      lines.push(
-        `السنة الثالثة: ${item.graduatedRates.year3}%`
-      );
-    }
-
-    lines.push(
-      `💵 الحد الأدنى: ${item.minAmount.toLocaleString(
-        "ar-EG"
-      )} جنيه`
-    );
-
-    lines.push("");
-  });
-
-  lines.push("احسب أرباح جميع شهادات الادخار مجانًا");
-  lines.push("https://daleelakelbanky.vercel.app");
-
-  return lines.join("\n");
-}
-export type PosterThemeConfig =
-  (typeof POSTER_THEMES)[PosterTheme];

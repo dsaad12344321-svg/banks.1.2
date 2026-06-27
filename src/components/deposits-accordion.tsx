@@ -27,35 +27,97 @@ const payoutMap = {
 
 const EXAMPLE_AMOUNT = 100000;
 
-function calculateExample(deposit: Deposit) {
+type ExampleResult =
+  | {
+      type: "monthly";
+      monthly: number;
+      total: number;
+    }
+  | {
+      type: "quarterly";
+      quarterly: number;
+      total: number;
+    }
+  | {
+      type: "annual";
+      annual: number;
+      total: number;
+    }
+  | {
+      type: "upfront";
+      total: number;
+    }
+  | {
+      type: "maturity";
+      total: number;
+    };
+
+function calculateExample(
+  deposit: Deposit
+): ExampleResult {
+
   const principal = EXAMPLE_AMOUNT;
 
   switch (deposit.type) {
+
     case "monthly": {
-      const monthly = (principal * deposit.interestRate) / 100 / 12;
-      return { type: "monthly", monthly, total: monthly * deposit.duration };
+
+      const monthly =
+        (principal * deposit.interestRate) /
+        100 /
+        12;
+
+      return {
+        type: "monthly",
+        monthly,
+        total: monthly * deposit.duration,
+      };
     }
 
     case "quarterly": {
-      const quarterly = (principal * deposit.interestRate) / 100 / 4;
-      return { type: "quarterly", quarterly, total: quarterly * (deposit.duration / 3) };
+
+      const quarterly =
+        (principal * deposit.interestRate) /
+        100 /
+        4;
+
+      return {
+        type: "quarterly",
+        quarterly,
+        total:
+          quarterly *
+          (deposit.duration / 3),
+      };
     }
 
     case "annual": {
-      const annual = (principal * deposit.interestRate) / 100;
-      return { type: "annual", annual, total: annual * (deposit.duration / 12) };
+
+      const annual =
+        (principal * deposit.interestRate) /
+        100;
+
+      return {
+        type: "annual",
+        annual,
+        total:
+          annual *
+          (deposit.duration / 12),
+      };
     }
 
     case "upfront":
     case "maturity": {
-      const total =
-        principal * (deposit.interestRate / 100) * (deposit.duration / 12);
-      return { type: deposit.type, total };
-    }
 
-    default:
-      return { type: "annual", annual: 0, total: 0 };
+      return {
+        type: deposit.type,
+        total:
+          principal *
+          (deposit.interestRate / 100) *
+          (deposit.duration / 12),
+      };
+    }
   }
+
 }
 
 export default function DepositsAccordion({ banks }: { banks: Bank[] }) {

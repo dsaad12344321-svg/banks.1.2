@@ -6,7 +6,7 @@
       "logo": "/misr.png",
       "certificates": [
         {
-          "id": "cert-1765597439987",
+          "id": "misr-cert-fixed36-m",
           "name": "شھادة القمة-عائد شهرى",
           "duration": 36,
           "interestRate": 17.75,
@@ -27,7 +27,7 @@
           ]
         },
 {
-  "id": "cert-qemma-quarterly",
+  "id": "misr-cert-fixed36-q",
   "name": "شهادة القمة-عائد ربع سنوى",
   "duration": 36,
   "interestRate": 17.85,
@@ -48,7 +48,7 @@
   ]
 },
         {
-          "id": "cert-1765597128970",
+          "id": "misr-cert-grad36-m",
           "name": "شهادة ابن مصر الثلاثية المتناقصة عائد شهرى",
           "duration": 36,
           "interestRate": 20.5,
@@ -68,7 +68,7 @@
           ]
         },
         {
-          "id": "cert-ibn-misr-annual-graduated",
+          "id": "misr-cert-grad36-y",
           "name": "شهادة ابن مصر الثلاثية المتناقصة عائد سنوى",
           "duration": 36,
           "interestRate": 22,
@@ -99,7 +99,7 @@
       "logo": "/elahly.png",
       "certificates": [
         {
-          "id": "cert-1767235786478",
+          "id": "elahly-cert-fixed12",
           "name": "شهادة استثمار ب",
           "duration": 12,
           "interestRate": 14,
@@ -121,7 +121,7 @@
           ]
         },
         {
-          "id": "cert-1768000000000",
+          "id": "elahly-cert-fixed36-q15",
           "name": "شهادة استثمار ب",
           "duration": 36,
           "interestRate": 15,
@@ -141,7 +141,7 @@
           ]
         },
         {
-          "id": "nbe-3-year",
+          "id": "elahly-cert-fixed36-m",
           "name": "الشهادة البلاتينيه 3 سنوات",
           "duration": 36,
           "interestRate": 17.75,
@@ -162,7 +162,7 @@
           ]
         },
 {
-"id": "nbe-3-year-quarterly",
+"id": "elahy-cert-fixed36-q",
 "name": "الشهادة البلاتينيه 3 سنوات - عائد ربع سنوى",
 "duration": 36,
 "interestRate": 17.85,
@@ -184,7 +184,7 @@
 ]
 },
         {
-          "id": "cert-1765587613441",
+          "id": "elahly-cert-grad36-m",
           "name": "الشهادة البلاتينيه ذات العائد المتدرج الشهري",
           "duration": 36,
           "interestRate": 21,
@@ -205,7 +205,7 @@
           ]
         },
         {
-          "id": "cert-1765592547890",
+          "id": "elahly-cert-grad36-y",
           "name": "الشهادة البلاتينيه ذات العائد المتدرج السنوي",
           "duration": 36,
           "interestRate": 22,
@@ -233,7 +233,7 @@
       "logo": "/cib.png",
       "certificates": [
         {
-          "id": "cib-premium-cert",
+          "id": "cib-cert-fixed36-m",
           "name": "شهادة Premium",
           "duration": 36,
           "interestRate": 17.5,
@@ -261,7 +261,7 @@
       "logo": "/cairo.png",
       "certificates": [
         {
-          "id": "cairo-primo-graduated-cert",
+          "id": "cairo-cert-grad36-m",
           "name": "بريمو ذات العائد المتدرج",
           "duration": 36,
           "interestRate": 18,

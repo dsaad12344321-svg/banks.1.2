@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useState } from "react";
+import { Download } from "lucide-react";
 
 const navItems = [
   { name: "شهادات الادخار", href: "/" },
@@ -40,6 +41,16 @@ export default function HeaderClient() {
             height={40}
           />
           <span className="font-bold text-lg">دليلك البنكي</span>
+        </Link>
+          {/* Download APK */}
+        <Link
+          href="/Daleelak-Elbanky.apk"
+          download
+          className="p-2 rounded-md hover:bg-muted transition-colors"
+          aria-label="تحميل التطبيق"
+          title="تحميل التطبيق"
+        >
+          <Download className="h-5 w-5" />
         </Link>
 
         {/* Desktop Navigation */}

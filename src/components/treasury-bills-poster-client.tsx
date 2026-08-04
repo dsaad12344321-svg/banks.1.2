@@ -545,7 +545,7 @@ const dataUrl = await toPng(node, {
 
                     <strong>
 
-                      {bill.rate.toFixed(2)}%
+                      {bill.rate.toFixed(3)}%
 
                     </strong>
 

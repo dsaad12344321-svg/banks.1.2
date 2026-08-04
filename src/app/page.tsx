@@ -161,7 +161,12 @@ export default async function Home() {
       <Script src="https://pl28554239.effectivegatecpm.com/2e/e3/0f/2ee30f414739c4b678668d5dd9b109cc.js"
         strategy="afterInteractive"
       />
-  
+    {/* Social Bar */}
+  <Script
+    src="https://pl30689020.effectivecpmnetwork.com/c5/0c/3e/c50c3e6f2d075d4a31494a207d598f08.js"
+    strategy="afterInteractive"
+  />
+
       {/* Structured Data */}
       <script
         type="application/ld+json"

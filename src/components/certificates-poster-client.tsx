@@ -199,17 +199,17 @@ export default function CertificatesPosterClient({
       const node = posterRef.current;
 
       const dataUrl = await toPng(node, {
-        pixelRatio: 4,
+        pixelRatio: 2,
         cacheBust: true,
 
         width: node.scrollWidth,
         height: node.scrollHeight,
 
         canvasWidth:
-          node.scrollWidth * 4,
+          node.scrollWidth * 2,
 
         canvasHeight:
-          node.scrollHeight * 4,
+          node.scrollHeight * 2,
 
         style: {
           margin: "0",

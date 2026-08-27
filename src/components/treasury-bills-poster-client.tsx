@@ -144,14 +144,14 @@ export default function TreasuryBillsPosterClient() {
 const node = posterRef.current;
 
 const dataUrl = await toPng(node, {
-  pixelRatio: 3,
+  pixelRatio: 2,
   cacheBust: true,
 
   width: node.scrollWidth,
   height: node.scrollHeight,
 
-  canvasWidth: node.scrollWidth * 3,
-  canvasHeight: node.scrollHeight * 3,
+  canvasWidth: node.scrollWidth * 2,
+  canvasHeight: node.scrollHeight * 2,
 
   style: {
     margin: "0",

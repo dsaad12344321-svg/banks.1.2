@@ -30,6 +30,8 @@ interface DepositSelectionProps {
     selected: boolean
   ) => void;
 
+  sendToSocialDashboard: () => void;
+
   updateTheme: (
     theme: PosterTheme
   ) => void;
@@ -54,6 +56,7 @@ export default function DepositSelection({
   updateSize,
   downloadPoster,
   copyCaption,
+  sendToSocialDashboard,
   resetSettings,
 }: DepositSelectionProps) {
 
@@ -321,6 +324,14 @@ export default function DepositSelection({
             onClick={copyCaption}
           >
             نسخ النص
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={sendToSocialDashboard}
+          >
+            إرسال إلى Social Dashboard
           </Button>
 
           <Button

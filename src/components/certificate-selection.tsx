@@ -30,6 +30,8 @@ interface CertificateSelectionProps {
     selected: boolean
   ) => void;
 
+  sendToSocialDashboard: () => void;
+
   updateTheme: (
     theme: PosterTheme
   ) => void;
@@ -54,6 +56,7 @@ export default function CertificateSelection({
   updateSize,
   downloadPoster,
   copyCaption,
+  sendToSocialDashboard,
   resetSettings,
 }: CertificateSelectionProps) {
 
@@ -329,6 +332,14 @@ export default function CertificateSelection({
             onClick={copyCaption}
           >
             نسخ النص
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={sendToSocialDashboard}
+          >
+            إرسال إلى Social Dashboard
           </Button>
 
           <Button

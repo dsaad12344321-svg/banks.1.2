@@ -241,6 +241,66 @@ const selectedDeposits =
 
   }
 
+  /*=============================
+      Sender
+  ==============================*/
+  async function sendToSocialDashboard() {
+  if (!posterRef.current) return;
+
+  if (!window.opener) {
+    toast.error(
+      "افتح منشئ البوست من Social Dashboard أولاً"
+    );
+    return;
+  }
+
+  try {
+    const node = posterRef.current;
+
+    const image = await toPng(node, {
+      pixelRatio: 2,
+      cacheBust: true,
+
+      width: node.scrollWidth,
+      height: node.scrollHeight,
+
+      canvasWidth: node.scrollWidth * 2,
+      canvasHeight: node.scrollHeight * 2,
+
+      style: {
+        margin: "0",
+        transform: "none",
+      },
+    });
+
+    const caption = generateCaption(
+      settings.issueDate,
+      selectedDeposits
+    );
+
+    window.opener.postMessage(
+      {
+        type: "DALEELAK_SOCIAL_POST",
+        source: "deposits",
+        title: "ودائع البنوك المصرية",
+        caption,
+        image,
+      },
+      "*"
+    );
+
+    toast.success(
+      "تم إرسال البوستر والكابشن إلى Social Dashboard"
+    );
+  } catch (error) {
+    console.error(error);
+
+    toast.error(
+      "تعذر إرسال البوست إلى Social Dashboard"
+    );
+  }
+}
+
   /* ===========================
       Copy Caption
   =========================== */
@@ -333,6 +393,8 @@ const selectedDeposits =
 
         copyCaption={copyCaption}
 
+        sendToSocialDashboard={sendToSocialDashboard}
+        
         resetSettings={
           resetSettings
         }

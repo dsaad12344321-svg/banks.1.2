@@ -239,9 +239,9 @@
           "interestRate": 17.5,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.5,
-            "year2": 17.5,
-            "year3": 17.5
+            "year1": 18,
+            "year2": 18,
+            "year3": 18
           },
           "type": "monthly",
           "minAmount": 50000,

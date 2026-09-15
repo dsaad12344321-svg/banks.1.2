@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 
 import DepositCard from "@/components/deposit-card";
@@ -12,12 +12,14 @@ import {
   POSTER_SIZES,
 } from "@/lib/deposits-poster";
 
+import { usePosterFit } from "@/hooks/use-poster-fit";
+
 interface DepositPosterPreviewProps {
   posterRef: React.RefObject<HTMLDivElement | null>;
 
   settings: PosterSettings;
 
-  deposits : PosterDeposit[];
+  deposits: PosterDeposit[];
 
   theme: PosterThemeConfig;
 }
@@ -28,22 +30,29 @@ export default function DepositPosterPreview({
   deposits,
   theme,
 }: DepositPosterPreviewProps) {
-
   const columns =
     deposits.length <= 1
       ? "grid-cols-1"
       : deposits.length <= 6
       ? "grid-cols-2"
       : "grid-cols-3";
-  const currentSize =
-    POSTER_SIZES[settings.size];
+
+  const currentSize = POSTER_SIZES[settings.size];
+
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const fitScale = usePosterFit(
+    contentRef,
+    currentSize.previewWidth,
+    currentSize.previewHeight
+  );
+
   return (
-
     <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
-
       <div
         ref={posterRef}
         className={`
+          relative
           mx-auto
           overflow-hidden
           rounded-3xl
@@ -55,137 +64,129 @@ export default function DepositPosterPreview({
           height: `${currentSize.previewHeight}px`,
         }}
       >
-
-        {/* ===========================
-            Header
-        =========================== */}
-
+        {/* =====================================================
+            Smart Fit Container
+            يقوم بتصغير المحتوى تلقائياً إذا كان أكبر من المقاس
+            المختار، بدون قص أي جزء من البوستر.
+        ===================================================== */}
         <div
+          ref={contentRef}
           className={`
-            ${theme.header}
-            px-8
-            py-8
-            text-center
-            text-white
+            absolute
+            left-1/2
+            top-0
+            ${theme.background}
           `}
+          style={{
+            width: `${currentSize.previewWidth}px`,
+            transform: `translateX(-50%) scale(${fitScale})`,
+            transformOrigin: "top center",
+          }}
         >
+          {/* ===========================
+              Header
+          =========================== */}
 
-          <div className="mb-4 flex justify-center">
-
-            <div
-              className="
-                flex
-                h-20
-                w-20
-                items-center
-                justify-center
-                rounded-full
-                bg-white
-                shadow-lg
-              "
-            >
-
-              <Image
-                src="/logo.png"
-                alt="دليلك البنكى"
-                width={42}
-                height={42}
-              />
-
-            </div>
-
-          </div>
-
-          <h1 className="text-3xl font-extrabold">
-
-                أفضل الودائع البنكية    
-          </h1>
-
-          <p className="mt-2 text-lg opacity-90">
-
-                تحديث أسعار عوائد الودائع
-          </p>
-
-        </div>
-
-        {/* ===========================
-            Date
-        =========================== */}
-
-        <div className="px-8 py-6 text-center">
-
-          <p className="text-sm text-muted-foreground">
-
-            آخر تحديث
-
-          </p>
-
-          <h2
+          <div
             className={`
-              mt-2
-              text-3xl
-              font-bold
-              ${theme.title}
+              ${theme.header}
+              px-8
+              py-8
+              text-center
+              text-white
             `}
           >
-            {settings.issueDate}
-          </h2>
-
-        </div>
-
-        {/* ===========================
-            Deposits 
-        =========================== */}
-
-        <div
-          className={`
-            grid
-            gap-4
-            px-6
-            pb-6
-            ${columns}
-          `}
-        >
-            {deposits.map((deposit) => (
-
-                <DepositCard
-                    key={deposit.id}
-                    deposit={deposit}
-                    theme={theme}
+            <div className="mb-4 flex justify-center">
+              <div
+                className="
+                  flex
+                  h-20
+                  w-20
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  shadow-lg
+                "
+              >
+                <Image
+                  src="/logo.png"
+                  alt="دليلك البنكى"
+                  width={42}
+                  height={42}
                 />
-
-            ))}
-
-        </div>
-
-        {/* ===========================
-            Footer
-        =========================== */}
-
-        <div className="border-t bg-white px-6 py-5">
-
-          <div className="text-center">
-
-            <div className="text-lg font-bold">
-
-              تطبيق دليلك البنكى
-
+              </div>
             </div>
 
-            <div className="mt-1 text-sm text-muted-foreground">
+            <h1 className="text-3xl font-extrabold">
+              أفضل الودائع البنكية
+            </h1>
 
-              daleelakelbanky.vercel.app
-
-            </div>
-
+            <p className="mt-2 text-lg opacity-90">
+              تحديث أسعار عوائد الودائع
+            </p>
           </div>
 
+          {/* ===========================
+              Date
+          =========================== */}
+
+          <div className="px-8 py-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              آخر تحديث
+            </p>
+
+            <h2
+              className={`
+                mt-2
+                text-3xl
+                font-bold
+                ${theme.title}
+              `}
+            >
+              {settings.issueDate}
+            </h2>
+          </div>
+
+          {/* ===========================
+              Deposits
+          =========================== */}
+
+          <div
+            className={`
+              grid
+              gap-4
+              px-6
+              pb-6
+              ${columns}
+            `}
+          >
+            {deposits.map((deposit) => (
+              <DepositCard
+                key={deposit.id}
+                deposit={deposit}
+                theme={theme}
+              />
+            ))}
+          </div>
+
+          {/* ===========================
+              Footer
+          =========================== */}
+
+          <div className="border-t bg-white px-6 py-5">
+            <div className="text-center">
+              <div className="text-lg font-bold">
+                تطبيق دليلك البنكى
+              </div>
+
+              <div className="mt-1 text-sm text-muted-foreground">
+                daleelakelbanky.vercel.app
+              </div>
+            </div>
+          </div>
         </div>
-
       </div>
-
     </div>
-
   );
-
 }

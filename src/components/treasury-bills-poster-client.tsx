@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { usePosterFit } from "@/hooks/use-poster-fit";
+
 import { toPng } from "html-to-image";
 
 import { toast } from "sonner";
@@ -32,6 +34,7 @@ const STORAGE_KEY = "treasury-poster-settings";
 
 export default function TreasuryBillsPosterClient() {
   const posterRef = useRef<HTMLDivElement>(null);
+  const posterContentRef = useRef<HTMLDivElement>(null);
 
   const [settings, setSettings] =
     useState<PosterSettings>({
@@ -95,6 +98,12 @@ export default function TreasuryBillsPosterClient() {
 
   const currentSize =
     POSTER_SIZES[settings.size];
+
+  const fitScale = usePosterFit(
+  posterContentRef,
+  currentSize.previewWidth,
+  currentSize.previewHeight
+);
 
   /* ===========================
       Update Helpers
@@ -511,18 +520,33 @@ const node = posterRef.current;
 
       <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
 
-        <div
-          ref={posterRef}
-          className={`
-            mx-auto overflow-hidden rounded-3xl
-            ${currentTheme.background}
-            shadow-2xl
-          `}
-          style={{
-            width: `${currentSize.previewWidth}px`,
-            height: `${currentSize.previewHeight}px`,
-          }}
-        >
+      <div
+  ref={posterRef}
+  className={`
+    relative
+    mx-auto
+    overflow-hidden
+    rounded-3xl
+    ${currentTheme.background}
+    shadow-2xl
+  `}
+  style={{
+    width: `${currentSize.previewWidth}px`,
+    height: `${currentSize.previewHeight}px`,
+  }}
+>
+  <div
+    ref={posterContentRef}
+    className={currentTheme.background}
+    style={{
+      position: "absolute",
+      top: 0,
+      left: "50%",
+      width: `${currentSize.previewWidth}px`,
+      transform: `translateX(-50%) scale(${fitScale})`,
+      transformOrigin: "top center",
+    }}
+  >
 
           {/* Header */}
 
@@ -702,5 +726,6 @@ const node = posterRef.current;
     </div>
 
   );
-
-}
+</div>
+)}
+  

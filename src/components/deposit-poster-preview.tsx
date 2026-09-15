@@ -12,15 +12,13 @@ import {
   POSTER_SIZES,
 } from "@/lib/deposits-poster";
 
+import { getPosterLayout } from "@/lib/poster-layout";
 import { usePosterFit } from "@/hooks/use-poster-fit";
 
 interface DepositPosterPreviewProps {
   posterRef: React.RefObject<HTMLDivElement | null>;
-
   settings: PosterSettings;
-
   deposits: PosterDeposit[];
-
   theme: PosterThemeConfig;
 }
 
@@ -38,6 +36,8 @@ export default function DepositPosterPreview({
       : "grid-cols-3";
 
   const currentSize = POSTER_SIZES[settings.size];
+
+  const layout = getPosterLayout(settings.size);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -64,11 +64,6 @@ export default function DepositPosterPreview({
           height: `${currentSize.previewHeight}px`,
         }}
       >
-        {/* =====================================================
-            Smart Fit Container
-            يقوم بتصغير المحتوى تلقائياً إذا كان أكبر من المقاس
-            المختار، بدون قص أي جزء من البوستر.
-        ===================================================== */}
         <div
           ref={contentRef}
           className={`
@@ -83,106 +78,128 @@ export default function DepositPosterPreview({
             transformOrigin: "top center",
           }}
         >
-          {/* ===========================
-              Header
-          =========================== */}
-
+          {/* Header */}
           <div
-            className={`
-              ${theme.header}
-              px-8
-              py-8
-              text-center
-              text-white
-            `}
+            className={`${theme.header} text-center text-white`}
+            style={{
+              padding: `${layout.headerY}px ${layout.headerX}px`,
+            }}
           >
-            <div className="mb-4 flex justify-center">
+            <div
+              className="flex justify-center"
+              style={{
+                marginBottom: layout.logoBottom,
+              }}
+            >
               <div
-                className="
-                  flex
-                  h-20
-                  w-20
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-white
-                  shadow-lg
-                "
+                className="flex items-center justify-center rounded-full bg-white shadow-lg"
+                style={{
+                  width: layout.logoBox,
+                  height: layout.logoBox,
+                }}
               >
                 <Image
                   src="/logo.png"
                   alt="دليلك البنكى"
-                  width={42}
-                  height={42}
+                  width={layout.logo}
+                  height={layout.logo}
                 />
               </div>
             </div>
 
-            <h1 className="text-3xl font-extrabold">
+            <h1
+              className="font-extrabold"
+              style={{
+                fontSize: layout.title,
+                lineHeight: 1.2,
+              }}
+            >
               أفضل الودائع البنكية
             </h1>
 
-            <p className="mt-2 text-lg opacity-90">
+            <p
+              className="opacity-90"
+              style={{
+                marginTop: layout.subtitleTop,
+                fontSize: layout.subtitle,
+              }}
+            >
               تحديث أسعار عوائد الودائع
             </p>
           </div>
 
-          {/* ===========================
-              Date
-          =========================== */}
-
-          <div className="px-8 py-6 text-center">
-            <p className="text-sm text-muted-foreground">
+          {/* Date */}
+          <div
+            className="text-center"
+            style={{
+              padding: `${layout.dateY}px ${layout.dateX}px`,
+            }}
+          >
+            <p
+              className="text-muted-foreground"
+              style={{
+                fontSize: layout.dateLabel,
+              }}
+            >
               آخر تحديث
             </p>
 
             <h2
-              className={`
-                mt-2
-                text-3xl
-                font-bold
-                ${theme.title}
-              `}
+              className={`font-bold ${theme.title}`}
+              style={{
+                marginTop: layout.dateTop,
+                fontSize: layout.date,
+                lineHeight: 1.2,
+              }}
             >
               {settings.issueDate}
             </h2>
           </div>
 
-          {/* ===========================
-              Deposits
-          =========================== */}
-
+          {/* Deposits Grid */}
           <div
-            className={`
-              grid
-              gap-4
-              px-6
-              pb-6
-              ${columns}
-            `}
+            className={`grid ${columns}`}
+            style={{
+              gap: layout.gridGap,
+              paddingLeft: layout.gridX,
+              paddingRight: layout.gridX,
+              paddingBottom: layout.gridBottom,
+            }}
           >
             {deposits.map((deposit) => (
               <DepositCard
                 key={deposit.id}
                 deposit={deposit}
                 theme={theme}
+                size={settings.size}
               />
             ))}
           </div>
 
-          {/* ===========================
-              Footer
-          =========================== */}
+          {/* Footer */}
+          <div
+            className="border-t bg-white text-center"
+            style={{
+              padding: `${layout.footerY}px ${layout.footerX}px`,
+            }}
+          >
+            <div
+              className="font-bold"
+              style={{
+                fontSize: layout.footerTitle,
+              }}
+            >
+              تطبيق دليلك البنكى
+            </div>
 
-          <div className="border-t bg-white px-6 py-5">
-            <div className="text-center">
-              <div className="text-lg font-bold">
-                تطبيق دليلك البنكى
-              </div>
-
-              <div className="mt-1 text-sm text-muted-foreground">
-                daleelakelbanky.vercel.app
-              </div>
+            <div
+              className="text-muted-foreground"
+              style={{
+                marginTop: layout.footerTextTop,
+                fontSize: layout.footerText,
+              }}
+            >
+              daleelakelbanky.vercel.app
             </div>
           </div>
         </div>

@@ -3,17 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { usePosterFit } from "@/hooks/use-poster-fit";
+import { getPosterLayout } from "@/lib/poster-layout";
 
 import { toPng } from "html-to-image";
-
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
 
 import {
@@ -28,6 +25,7 @@ import {
   createDefaultBills,
   generateCaption,
 } from "@/lib/treasury-bills";
+
 import Image from "next/image";
 
 const STORAGE_KEY = "treasury-poster-settings";
@@ -99,11 +97,14 @@ export default function TreasuryBillsPosterClient() {
   const currentSize =
     POSTER_SIZES[settings.size];
 
+  const layout =
+    getPosterLayout(settings.size);
+
   const fitScale = usePosterFit(
-  posterContentRef,
-  currentSize.previewWidth,
-  currentSize.previewHeight
-);
+    posterContentRef,
+    currentSize.previewWidth,
+    currentSize.previewHeight
+  );
 
   /* ===========================
       Update Helpers
@@ -161,7 +162,7 @@ export default function TreasuryBillsPosterClient() {
   async function downloadPoster() {
     if (!posterRef.current) return;
 
-const node = posterRef.current;
+    const node = posterRef.current;
 
     const dataUrl = await toPng(node, {
       pixelRatio: 1,
@@ -192,65 +193,67 @@ const node = posterRef.current;
       "تم تحميل الصورة بنجاح"
     );
   }
-  /*============================
-        Sender
-  =============================*/
+
+  /* ===========================
+      Send To Social Dashboard
+  =========================== */
+
   async function sendToSocialDashboard() {
-  if (!posterRef.current) return;
+    if (!posterRef.current) return;
 
-  if (!window.opener) {
-    toast.error(
-      "افتح منشئ البوست من Social Dashboard أولاً"
-    );
-    return;
+    if (!window.opener) {
+      toast.error(
+        "افتح منشئ البوست من Social Dashboard أولاً"
+      );
+      return;
+    }
+
+    try {
+      const node = posterRef.current;
+
+      const image = await toPng(node, {
+        pixelRatio: 1,
+        cacheBust: true,
+
+        width: currentSize.previewWidth,
+        height: currentSize.previewHeight,
+
+        canvasWidth: currentSize.width,
+        canvasHeight: currentSize.height,
+
+        style: {
+          margin: "0",
+          transform: "none",
+        },
+      });
+
+      const caption = generateCaption(
+        settings.issueDate,
+        results
+      );
+
+      window.opener.postMessage(
+        {
+          type: "DALEELAK_SOCIAL_POST",
+          source: "treasury",
+          title: "أذون الخزانة المصرية",
+          caption,
+          image,
+        },
+        "*"
+      );
+
+      toast.success(
+        "تم إرسال البوستر والكابشن إلى Social Dashboard"
+      );
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        "تعذر إرسال البوست إلى Social Dashboard"
+      );
+    }
   }
-
-  try {
-    const node = posterRef.current;
-
-    const image = await toPng(node, {
-      pixelRatio: 1,
-      cacheBust: true,
-
-      width: currentSize.previewWidth,
-      height: currentSize.previewHeight,
-
-      canvasWidth: currentSize.width,
-      canvasHeight: currentSize.height,
-
-      style: {
-        margin: "0",
-        transform: "none",
-      },
-    });
-
-    const caption = generateCaption(
-      settings.issueDate,
-      results
-    );
-
-    window.opener.postMessage(
-      {
-        type: "DALEELAK_SOCIAL_POST",
-        source: "treasury",
-        title: "أذون الخزانة المصرية",
-        caption,
-        image,
-      },
-      "*"
-    );
-
-    toast.success(
-      "تم إرسال البوستر والكابشن إلى Social Dashboard"
-    );
-  } catch (error) {
-    console.error(error);
-
-    toast.error(
-      "تعذر إرسال البوست إلى Social Dashboard"
-    );
-  }
-}
 
   /* ===========================
       Copy Caption
@@ -268,7 +271,8 @@ const node = posterRef.current;
       "تم نسخ النص"
     );
   }
-    /* ===========================
+
+  /* ===========================
       Reset
   =========================== */
 
@@ -285,7 +289,9 @@ const node = posterRef.current;
       bills: createDefaultBills(),
     });
 
-    toast.success("تم إعادة ضبط الإعدادات");
+    toast.success(
+      "تم إعادة ضبط الإعدادات"
+    );
   }
 
   /* ===========================
@@ -306,11 +312,8 @@ const node = posterRef.current;
           {/* Date */}
 
           <div>
-
             <Label className="mb-2 block">
-
               تاريخ الإصدار
-
             </Label>
 
             <Input
@@ -320,17 +323,13 @@ const node = posterRef.current;
                 updateDate(e.target.value)
               }
             />
-
           </div>
 
           {/* Bills */}
 
           <div>
-
             <Label className="mb-4 block">
-
               بيانات الأذون
-
             </Label>
 
             <div className="space-y-4">
@@ -347,15 +346,11 @@ const node = posterRef.current;
                     <div>
 
                       <h4 className="font-bold">
-
                         {bill.days} يوم
-
                       </h4>
 
                       <p className="text-xs text-muted-foreground">
-
                         سعر العائد
-
                       </p>
 
                     </div>
@@ -365,10 +360,13 @@ const node = posterRef.current;
                       checked={bill.enabled}
                       onChange={(e) =>
                         updateBill(bill.days, {
-                          enabled: e.target.checked,
-                          status: e.target.checked
-                            ? "available"
-                            : "hidden",
+                          enabled:
+                            e.target.checked,
+
+                          status:
+                            e.target.checked
+                              ? "available"
+                              : "hidden",
                         })
                       }
                     />
@@ -395,7 +393,6 @@ const node = posterRef.current;
               ))}
 
             </div>
-
           </div>
 
           {/* Theme */}
@@ -403,9 +400,7 @@ const node = posterRef.current;
           <div>
 
             <Label className="mb-3 block">
-
               لون التصميم
-
             </Label>
 
             <div className="grid grid-cols-3 gap-2">
@@ -433,7 +428,6 @@ const node = posterRef.current;
               )}
 
             </div>
-
           </div>
 
           {/* Size */}
@@ -441,9 +435,7 @@ const node = posterRef.current;
           <div>
 
             <Label className="mb-3 block">
-
               مقاس الصورة
-
             </Label>
 
             <div className="grid grid-cols-2 gap-2">
@@ -471,7 +463,6 @@ const node = posterRef.current;
               )}
 
             </div>
-
           </div>
 
           {/* Actions */}
@@ -492,7 +483,7 @@ const node = posterRef.current;
             >
               نسخ النص
             </Button>
-            
+
             <Button
               variant="outline"
               className="w-full"
@@ -514,205 +505,328 @@ const node = posterRef.current;
         </div>
 
       </Card>
-            {/* =======================================
+
+      {/* =======================================
           Poster Preview
       ======================================== */}
 
       <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
 
-      <div
-  ref={posterRef}
-  className={`
-    relative
-    mx-auto
-    overflow-hidden
-    rounded-3xl
-    ${currentTheme.background}
-    shadow-2xl
-  `}
-  style={{
-    width: `${currentSize.previewWidth}px`,
-    height: `${currentSize.previewHeight}px`,
-  }}
->
-  <div
-    ref={posterContentRef}
-    className={currentTheme.background}
-    style={{
-      position: "absolute",
-      top: 0,
-      left: "50%",
-      width: `${currentSize.previewWidth}px`,
-      transform: `translateX(-50%) scale(${fitScale})`,
-      transformOrigin: "top center",
-    }}
-  >
-
-          {/* Header */}
+        <div
+          ref={posterRef}
+          className={`
+            relative
+            mx-auto
+            overflow-hidden
+            rounded-3xl
+            ${currentTheme.background}
+            shadow-2xl
+          `}
+          style={{
+            width: `${currentSize.previewWidth}px`,
+            height: `${currentSize.previewHeight}px`,
+          }}
+        >
 
           <div
-            className={`${currentTheme.header} px-8 py-8 text-center text-white`}
+            ref={posterContentRef}
+            className={currentTheme.background}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              width: `${currentSize.previewWidth}px`,
+              transform: `translateX(-50%) scale(${fitScale})`,
+              transformOrigin: "top center",
+            }}
           >
 
-            <div className="mb-4 flex justify-center">
+            {/* =================================
+                Header
+            ================================= */}
 
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-4xl">
-
-                          <Image
-                            src="/logo.png"
-                            alt="دليلك البنكي"
-                            width={40}
-                            height={40}
-                          />
-
-              </div>
-
-            </div>
-
-            <h1 className="text-3xl font-extrabold">
-
-              أذون الخزانة المصرية
-
-            </h1>
-
-            <p className="mt-2 text-lg opacity-90">
-
-             العروض المقبولة
-
-            </p>
-
-          </div>
-
-          {/* Date */}
-
-          <div className="px-8 py-6 text-center">
-
-            <p className="text-sm text-gray-500">
-
-              تاريخ الإصدار
-
-            </p>
-
-            <h2
-              className={`mt-2 text-3xl font-bold ${currentTheme.title}`}
+            <div
+              className={`${currentTheme.header} text-center text-white`}
+              style={{
+                padding: `${layout.headerY}px ${layout.headerX}px`,
+              }}
             >
-              {settings.issueDate}
-            </h2>
-
-          </div>
-
-          {/* Bills Grid */}
-
-          <div
-            className={`
-              grid gap-4 px-6 pb-6
-              ${
-                results.length <= 1
-                  ? "grid-cols-1"
-                  : "grid-cols-2"
-              }
-            `}
-          >
-
-            {results.map((bill) => (
 
               <div
-                key={bill.days}
-                className={`
-                  rounded-2xl
-                  border-2
-                  p-5
-                  ${currentTheme.card}
-                  ${currentTheme.border}
-                  ${currentTheme.shadow}
-                `}
+                className="flex justify-center"
+                style={{
+                  marginBottom:
+                    layout.logoBottom,
+                }}
               >
 
                 <div
-                  className={`mb-4 text-center text-2xl font-bold ${currentTheme.title}`}
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-white
+                    shadow-lg
+                  "
+                  style={{
+                    width:
+                      layout.logoBox,
+
+                    height:
+                      layout.logoBox,
+                  }}
                 >
 
-                  {bill.days} يوم
-
-                </div>
-
-                <div className="space-y-3 text-sm">
-
-                  <div className="flex justify-between">
-
-                    <span>العائد</span>
-
-                    <strong>
-
-                      {bill.rate.toFixed(3)}%
-
-                    </strong>
-
-                  </div>
-
-                  <div className="flex justify-between">
-
-                    <span>صافى الربح</span>
-
-                    <strong className="text-green-600">
-
-                      {bill.netProfit.toLocaleString("ar-EG", {
-                        minimumFractionDigits: 2,
-                      })}
-
-                    </strong>
-
-                  </div>
-
-                  <div className="flex justify-between">
-
-                    <span>الضريبة</span>
-
-                    <strong>
-
-                      {bill.tax.toLocaleString("ar-EG", {
-                        minimumFractionDigits: 2,
-                      })}
-
-                    </strong>
-
-                  </div>
-
-                  <div className="flex justify-between">
-
-                    <span>المبلغ المستثمر</span>
-
-                    <strong>
-
-                      {DEFAULT_INVESTMENT_AMOUNT.toLocaleString("ar-EG")}
-
-                    </strong>
-
-                  </div>
+                  <Image
+                    src="/logo.png"
+                    alt="دليلك البنكي"
+                    width={layout.logo}
+                    height={layout.logo}
+                  />
 
                 </div>
 
               </div>
 
-            ))}
-                      </div>
+              <h1
+                className="font-extrabold"
+                style={{
+                  fontSize:
+                    layout.title,
 
-          {/* Footer */}
+                  lineHeight: 1.2,
+                }}
+              >
+                أذون الخزانة المصرية
+              </h1>
 
-          <div className="border-t bg-white px-6 py-5">
+              <p
+                className="opacity-90"
+                style={{
+                  marginTop:
+                    layout.subtitleTop,
 
-            <div className="text-center">
+                  fontSize:
+                    layout.subtitle,
+                }}
+              >
+                العروض المقبولة
+              </p>
 
-              <div className="text-lg font-bold">
+            </div>
 
+            {/* =================================
+                Date
+            ================================= */}
+
+            <div
+              className="text-center"
+              style={{
+                padding: `${layout.dateY}px ${layout.dateX}px`,
+              }}
+            >
+
+              <p
+                className="text-muted-foreground"
+                style={{
+                  fontSize:
+                    layout.dateLabel,
+                }}
+              >
+                تاريخ الإصدار
+              </p>
+
+              <h2
+                className={`font-bold ${currentTheme.title}`}
+                style={{
+                  marginTop:
+                    layout.dateTop,
+
+                  fontSize:
+                    layout.date,
+
+                  lineHeight: 1.2,
+                }}
+              >
+                {settings.issueDate}
+              </h2>
+
+            </div>
+
+            {/* =================================
+                Bills Grid
+            ================================= */}
+
+            <div
+              className={`
+                grid
+                ${
+                  results.length <= 1
+                    ? "grid-cols-1"
+                    : "grid-cols-2"
+                }
+              `}
+              style={{
+                gap:
+                  layout.gridGap,
+
+                paddingLeft:
+                  layout.gridX,
+
+                paddingRight:
+                  layout.gridX,
+
+                paddingBottom:
+                  layout.gridBottom,
+              }}
+            >
+
+              {results.map((bill) => (
+
+                <div
+                  key={bill.days}
+                  className={`
+                    border-2
+                    ${currentTheme.card}
+                    ${currentTheme.border}
+                    ${currentTheme.shadow}
+                  `}
+                  style={{
+                    borderRadius:
+                      layout.cardRadius,
+
+                    padding:
+                      layout.cardPadding,
+                  }}
+                >
+
+                  <div
+                    className={`text-center font-bold ${currentTheme.title}`}
+                    style={{
+                      marginBottom:
+                        layout.cardBankBottom,
+
+                      fontSize:
+                        layout.bankName,
+
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {bill.days} يوم
+                  </div>
+
+                  <div
+                    className="flex flex-col"
+                    style={{
+                      gap:
+                        layout.detailGap,
+
+                      fontSize:
+                        layout.detailText,
+                    }}
+                  >
+
+                    <div className="flex justify-between gap-3">
+
+                      <span>
+                        العائد
+                      </span>
+
+                      <strong>
+                        {bill.rate.toFixed(3)}%
+                      </strong>
+
+                    </div>
+
+                    <div className="flex justify-between gap-3">
+
+                      <span>
+                        صافى الربح
+                      </span>
+
+                      <strong className="text-green-600">
+                        {bill.netProfit.toLocaleString(
+                          "ar-EG",
+                          {
+                            minimumFractionDigits: 2,
+                          }
+                        )}
+                      </strong>
+
+                    </div>
+
+                    <div className="flex justify-between gap-3">
+
+                      <span>
+                        الضريبة
+                      </span>
+
+                      <strong>
+                        {bill.tax.toLocaleString(
+                          "ar-EG",
+                          {
+                            minimumFractionDigits: 2,
+                          }
+                        )}
+                      </strong>
+
+                    </div>
+
+                    <div className="flex justify-between gap-3">
+
+                      <span>
+                        المبلغ المستثمر
+                      </span>
+
+                      <strong>
+                        {DEFAULT_INVESTMENT_AMOUNT.toLocaleString(
+                          "ar-EG"
+                        )}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+            {/* =================================
+                Footer
+            ================================= */}
+
+            <div
+              className="border-t bg-white text-center"
+              style={{
+                padding: `${layout.footerY}px ${layout.footerX}px`,
+              }}
+            >
+
+              <div
+                className="font-bold"
+                style={{
+                  fontSize:
+                    layout.footerTitle,
+                }}
+              >
                 تطبيق دليلك البنكى
-
               </div>
 
-              <div className="mt-1 text-sm text-muted-foreground">
+              <div
+                className="text-muted-foreground"
+                style={{
+                  marginTop:
+                    layout.footerTextTop,
 
-                https://daleelakelbanky.vercel.app
-
+                  fontSize:
+                    layout.footerText,
+                }}
+              >
+                daleelakelbanky.vercel.app
               </div>
 
             </div>
@@ -724,8 +838,5 @@ const node = posterRef.current;
       </div>
 
     </div>
-
   );
-</div>
-)}
-  
+}

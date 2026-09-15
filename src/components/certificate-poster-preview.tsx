@@ -9,6 +9,7 @@ import {
   PosterCertificate,
   PosterSettings,
   PosterThemeConfig,
+  POSTER_SIZES,
 } from "@/lib/certificates-poster";
 
 interface CertificatePosterPreviewProps {
@@ -34,6 +35,8 @@ export default function CertificatePosterPreview({
       : certificates.length <= 6
       ? "grid-cols-2"
       : "grid-cols-3";
+  const currentSize =
+  POSTER_SIZES[settings.size];
 
   return (
 
@@ -49,12 +52,8 @@ export default function CertificatePosterPreview({
           ${theme.background}
         `}
         style={{
-          width: "420px",
-
-          minHeight:
-            settings.size === "post"
-              ? "600px"
-              : "760px",
+          width: `${currentSize.previewWidth}px`,
+          height: `${currentSize.previewHeight}px`,
         }}
       >
 

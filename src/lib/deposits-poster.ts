@@ -6,8 +6,11 @@ export type PosterTheme =
   | "red";
 
 export type PosterSize =
-  | "post"
-  | "story";
+  | "story"
+  | "square"
+  | "portrait45"
+  | "portrait34"
+  | "landscape";
 
 export interface Deposit {
   id: string;
@@ -204,26 +207,50 @@ export const POSTER_THEMES = {
    Poster Sizes
 =========================================== */
 
+/* ===========================================
+   Poster Sizes
+=========================================== */
+
 export const POSTER_SIZES = {
-
-  post: {
-
-    label: "منشور",
-
-    width: 420,
-
-    minHeight: 560,
-  },
-
   story: {
-
-    label: "ستورى",
-
-    width: 420,
-
-    minHeight: 760,
+    label: "Story 9:16 — 1080×1920 — Default",
+    width: 1080,
+    height: 1920,
+    previewWidth: 420,
+    previewHeight: 746.67,
   },
 
+  square: {
+    label: "Square 1:1 — 1080×1080",
+    width: 1080,
+    height: 1080,
+    previewWidth: 420,
+    previewHeight: 420,
+  },
+
+  portrait45: {
+    label: "Portrait 4:5 — 1080×1350",
+    width: 1080,
+    height: 1350,
+    previewWidth: 420,
+    previewHeight: 525,
+  },
+
+  portrait34: {
+    label: "Portrait 3:4 — 1080×1440",
+    width: 1080,
+    height: 1440,
+    previewWidth: 420,
+    previewHeight: 560,
+  },
+
+  landscape: {
+    label: "Landscape 1.91:1 — 1200×627",
+    width: 1200,
+    height: 627,
+    previewWidth: 420,
+    previewHeight: 219.45,
+  },
 } as const;
 
 /* ===========================================

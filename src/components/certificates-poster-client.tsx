@@ -44,7 +44,7 @@ export default function CertificatesPosterClient({
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       banks: createPosterBanks(
         banks
@@ -65,12 +65,18 @@ export default function CertificatesPosterClient({
     if (!saved) return;
 
     try {
+      const parsed = JSON.parse(saved);
 
-      const parsed =
-        JSON.parse(saved);
+      const size =
+        parsed?.size &&
+        parsed.size in POSTER_SIZES
+          ? parsed.size
+          : "story";
 
-      setSettings(parsed);
-
+      setSettings({
+        ...parsed,
+        size,
+      });
     } catch {}
 
   }, []);
@@ -191,25 +197,20 @@ export default function CertificatesPosterClient({
   =========================== */
 
   async function downloadPoster() {
-
     if (!posterRef.current) return;
 
     try {
-
       const node = posterRef.current;
 
       const dataUrl = await toPng(node, {
-        pixelRatio: 2,
+        pixelRatio: 1,
         cacheBust: true,
 
-        width: node.scrollWidth,
-        height: node.scrollHeight,
+        width: currentSize.previewWidth,
+        height: currentSize.previewHeight,
 
-        canvasWidth:
-          node.scrollWidth * 2,
-
-        canvasHeight:
-          node.scrollHeight * 2,
+        canvasWidth: currentSize.width,
+        canvasHeight: currentSize.height,
 
         style: {
           margin: "0",
@@ -220,7 +221,8 @@ export default function CertificatesPosterClient({
       const link =
         document.createElement("a");
 
-      link.download = `certificates-${settings.issueDate}.png`;
+      link.download =
+        `certificates-${settings.issueDate}.png`;
 
       link.href = dataUrl;
 
@@ -229,17 +231,13 @@ export default function CertificatesPosterClient({
       toast.success(
         "تم تحميل الصورة بنجاح"
       );
-
     } catch (error) {
-
       console.error(error);
 
       toast.error(
         "حدث خطأ أثناء إنشاء الصورة"
       );
-
     }
-
   }
 
   /*===============================
@@ -259,14 +257,14 @@ export default function CertificatesPosterClient({
     const node = posterRef.current;
 
     const image = await toPng(node, {
-      pixelRatio: 2,
+      pixelRatio: 1,
       cacheBust: true,
 
-      width: node.scrollWidth,
-      height: node.scrollHeight,
+      width: currentSize.previewWidth,
+      height: currentSize.previewHeight,
 
-      canvasWidth: node.scrollWidth * 2,
-      canvasHeight: node.scrollHeight * 2,
+      canvasWidth: currentSize.width,
+      canvasHeight: currentSize.height,
 
       style: {
         margin: "0",
@@ -347,7 +345,7 @@ export default function CertificatesPosterClient({
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       banks: createPosterBanks(
         banks

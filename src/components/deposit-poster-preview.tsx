@@ -9,6 +9,7 @@ import {
   PosterDeposit,
   PosterSettings,
   PosterThemeConfig,
+  POSTER_SIZES,
 } from "@/lib/deposits-poster";
 
 interface DepositPosterPreviewProps {
@@ -34,7 +35,8 @@ export default function DepositPosterPreview({
       : deposits.length <= 6
       ? "grid-cols-2"
       : "grid-cols-3";
-
+  const currentSize =
+    POSTER_SIZES[settings.size];
   return (
 
     <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
@@ -49,12 +51,8 @@ export default function DepositPosterPreview({
           ${theme.background}
         `}
         style={{
-          width: "420px",
-
-          minHeight:
-            settings.size === "post"
-              ? "600px"
-              : "760px",
+          width: `${currentSize.previewWidth}px`,
+          height: `${currentSize.previewHeight}px`,
         }}
       >
 

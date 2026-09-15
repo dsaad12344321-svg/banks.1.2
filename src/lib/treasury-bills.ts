@@ -171,25 +171,55 @@ export type PosterTheme = keyof typeof POSTER_THEMES;
    Export Sizes
 ========================================================== */
 
+/* ==========================================================
+   Export Sizes
+========================================================== */
+
 export const POSTER_SIZES = {
-  post: {
-    label: "Facebook / Instagram",
-
+  story: {
+    label: "Story 9:16 — 1080×1920 — Default",
     width: 1080,
-
-    height: 1350,
+    height: 1920,
+    previewWidth: 420,
+    previewHeight: 746.67,
   },
 
-  story: {
-    label: "TikTok / Shorts",
-
+  square: {
+    label: "Square 1:1 — 1080×1080",
     width: 1080,
+    height: 1080,
+    previewWidth: 420,
+    previewHeight: 420,
+  },
 
-    height: 1920,
+  portrait45: {
+    label: "Portrait 4:5 — 1080×1350",
+    width: 1080,
+    height: 1350,
+    previewWidth: 420,
+    previewHeight: 525,
+  },
+
+  portrait34: {
+    label: "Portrait 3:4 — 1080×1440",
+    width: 1080,
+    height: 1440,
+    previewWidth: 420,
+    previewHeight: 560,
+  },
+
+  landscape: {
+    label: "Landscape 1.91:1 — 1200×627",
+    width: 1200,
+    height: 627,
+    previewWidth: 420,
+    previewHeight: 219.45,
   },
 } as const;
 
 export type PosterSize = keyof typeof POSTER_SIZES;
+
+
 
 /* ==========================================================
    Helpers

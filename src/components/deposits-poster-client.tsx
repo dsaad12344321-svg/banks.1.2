@@ -43,7 +43,7 @@ export default function DepositsPosterClient({
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       banks: createPosterBanks(
         banks
@@ -64,12 +64,18 @@ export default function DepositsPosterClient({
     if (!saved) return;
 
     try {
+      const parsed = JSON.parse(saved);
 
-      const parsed =
-        JSON.parse(saved);
+      const size =
+        parsed?.size &&
+        parsed.size in POSTER_SIZES
+          ? parsed.size
+          : "story";
 
-      setSettings(parsed);
-
+      setSettings({
+        ...parsed,
+        size,
+      });
     } catch {}
 
   }, []);
@@ -190,25 +196,20 @@ const selectedDeposits =
   =========================== */
 
   async function downloadPoster() {
-
     if (!posterRef.current) return;
 
     try {
-
       const node = posterRef.current;
 
       const dataUrl = await toPng(node, {
-        pixelRatio: 2,
+        pixelRatio: 1,
         cacheBust: true,
 
-        width: node.scrollWidth,
-        height: node.scrollHeight,
+        width: currentSize.previewWidth,
+        height: currentSize.previewHeight,
 
-        canvasWidth:
-          node.scrollWidth * 2,
-
-        canvasHeight:
-          node.scrollHeight * 2,
+        canvasWidth: currentSize.width,
+        canvasHeight: currentSize.height,
 
         style: {
           margin: "0",
@@ -219,7 +220,8 @@ const selectedDeposits =
       const link =
         document.createElement("a");
 
-      link.download = `deposits-${settings.issueDate}.png`;
+      link.download =
+        `deposits-${settings.issueDate}.png`;
 
       link.href = dataUrl;
 
@@ -228,17 +230,13 @@ const selectedDeposits =
       toast.success(
         "تم تحميل الصورة بنجاح"
       );
-
     } catch (error) {
-
       console.error(error);
 
       toast.error(
         "حدث خطأ أثناء إنشاء الصورة"
       );
-
     }
-
   }
 
   /*=============================
@@ -258,14 +256,14 @@ const selectedDeposits =
     const node = posterRef.current;
 
     const image = await toPng(node, {
-      pixelRatio: 2,
+      pixelRatio: 1,
       cacheBust: true,
 
-      width: node.scrollWidth,
-      height: node.scrollHeight,
+      width: currentSize.previewWidth,
+      height: currentSize.previewHeight,
 
-      canvasWidth: node.scrollWidth * 2,
-      canvasHeight: node.scrollHeight * 2,
+      canvasWidth: currentSize.width,
+      canvasHeight: currentSize.height,
 
       style: {
         margin: "0",
@@ -346,7 +344,7 @@ const selectedDeposits =
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       banks: createPosterBanks(
         banks

@@ -41,7 +41,7 @@ export default function TreasuryBillsPosterClient() {
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       bills: createDefaultBills(),
     });
@@ -57,7 +57,18 @@ export default function TreasuryBillsPosterClient() {
     if (!saved) return;
 
     try {
-      setSettings(JSON.parse(saved));
+      const parsed = JSON.parse(saved);
+
+      const size =
+        parsed?.size &&
+        parsed.size in POSTER_SIZES
+          ? parsed.size
+          : "story";
+
+      setSettings({
+        ...parsed,
+        size,
+      });
     } catch {}
   }, []);
 
@@ -143,21 +154,21 @@ export default function TreasuryBillsPosterClient() {
 
 const node = posterRef.current;
 
-const dataUrl = await toPng(node, {
-  pixelRatio: 2,
-  cacheBust: true,
+    const dataUrl = await toPng(node, {
+      pixelRatio: 1,
+      cacheBust: true,
 
-  width: node.scrollWidth,
-  height: node.scrollHeight,
+      width: currentSize.previewWidth,
+      height: currentSize.previewHeight,
 
-  canvasWidth: node.scrollWidth * 2,
-  canvasHeight: node.scrollHeight * 2,
+      canvasWidth: currentSize.width,
+      canvasHeight: currentSize.height,
 
-  style: {
-    margin: "0",
-    transform: "none",
-  },
-});
+      style: {
+        margin: "0",
+        transform: "none",
+      },
+    });
 
     const link =
       document.createElement("a");
@@ -189,14 +200,14 @@ const dataUrl = await toPng(node, {
     const node = posterRef.current;
 
     const image = await toPng(node, {
-      pixelRatio: 2,
+      pixelRatio: 1,
       cacheBust: true,
 
-      width: node.scrollWidth,
-      height: node.scrollHeight,
+      width: currentSize.previewWidth,
+      height: currentSize.previewHeight,
 
-      canvasWidth: node.scrollWidth * 2,
-      canvasHeight: node.scrollHeight * 2,
+      canvasWidth: currentSize.width,
+      canvasHeight: currentSize.height,
 
       style: {
         margin: "0",
@@ -260,7 +271,7 @@ const dataUrl = await toPng(node, {
 
       theme: "green",
 
-      size: "post",
+      size: "story",
 
       bills: createDefaultBills(),
     });
@@ -508,11 +519,8 @@ const dataUrl = await toPng(node, {
             shadow-2xl
           `}
           style={{
-            width: "420px",
-            minHeight:
-              settings.size === "post"
-                ? "525px"
-                : "740px",
+            width: `${currentSize.previewWidth}px`,
+            height: `${currentSize.previewHeight}px`,
           }}
         >
 

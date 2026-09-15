@@ -9,19 +9,26 @@ import {
   getReturnTypeLabel,
 } from "@/lib/certificates-poster";
 
+import {
+  getPosterLayout,
+  PosterLayoutSize,
+} from "@/lib/poster-layout";
+
 interface CertificateCardProps {
   certificate: PosterCertificate;
-
   theme: PosterThemeConfig;
-
   showDescription?: boolean;
+  size?: PosterLayoutSize;
 }
 
 export default function CertificateCard({
   certificate,
   theme,
   showDescription = false,
+  size = "story",
 }: CertificateCardProps) {
+  const layout = getPosterLayout(size);
+
   const isGraduated =
     certificate.returnType === "graduated" &&
     certificate.graduatedRates;
@@ -29,113 +36,141 @@ export default function CertificateCard({
   return (
     <div
       className={`
-        rounded-2xl
         border-2
-        p-5
         transition-all
         ${theme.card}
         ${theme.border}
         ${theme.shadow}
       `}
+      style={{
+        padding: layout.cardPadding,
+        borderRadius: layout.cardRadius,
+      }}
     >
-      {/* ===========================
-          Bank
-      =========================== */}
-
-      <div className="mb-5 flex flex-col items-center text-center">
-
-        <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-white shadow">
-
+      <div
+        className="flex flex-col items-center text-center"
+        style={{
+          marginBottom: layout.cardBankBottom,
+        }}
+      >
+        <div
+          className="flex items-center justify-center rounded-full bg-white shadow"
+          style={{
+            width: layout.bankLogoBox,
+            height: layout.bankLogoBox,
+            marginBottom: layout.bankLogoBottom,
+          }}
+        >
           <Image
             src={certificate.bankLogo}
             alt={certificate.bankName}
-            width={44}
-            height={44}
+            width={layout.bankLogo}
+            height={layout.bankLogo}
           />
-
         </div>
 
         <h3
-          className={`text-lg font-bold ${theme.title}`}
+          className={`font-bold ${theme.title}`}
+          style={{
+            fontSize: layout.bankName,
+            lineHeight: 1.25,
+          }}
         >
           {certificate.bankName}
         </h3>
 
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p
+          className="text-muted-foreground"
+          style={{
+            marginTop: 3,
+            fontSize: layout.cardName,
+            lineHeight: 1.3,
+          }}
+        >
           {certificate.name}
         </p>
-
       </div>
 
-      {/* ===========================
-          Interest
-      =========================== */}
-
-      <div className="mb-5 text-center">
-
+      <div
+        className="text-center"
+        style={{
+          marginBottom: layout.interestBottom,
+        }}
+      >
         <div
-          className={`text-4xl font-extrabold ${theme.title}`}
+          className={`font-extrabold ${theme.title}`}
+          style={{
+            fontSize: layout.interest,
+            lineHeight: 1,
+          }}
         >
           {certificate.interestRate}%
         </div>
 
-        <div className="mt-1 text-xs text-muted-foreground">
+        <div
+          className="text-muted-foreground"
+          style={{
+            marginTop: 3,
+            fontSize: layout.interestLabel,
+          }}
+        >
           سعر العائد
         </div>
-
       </div>
 
-      <div className="my-5 border-t" />
+      <div
+        className="border-t"
+        style={{
+          marginTop: layout.dividerY,
+          marginBottom: layout.dividerY,
+        }}
+      />
 
-      {/* ===========================
-          Details
-      =========================== */}
-
-      <div className="space-y-3 text-sm">
-
-        <div className="flex items-center justify-between">
-
-          <span>
-            ⏳ المدة
-          </span>
+      <div
+        className="space-y-0"
+        style={{
+          fontSize: layout.detailText,
+        }}
+      >
+        <div
+          className="flex items-center justify-between gap-2"
+          style={{ marginBottom: layout.detailGap }}
+        >
+          <span>⏳ المدة</span>
 
           <strong>
-            {certificate.duration / 12} سنوات
+            {certificate.duration >= 12
+              ? `${certificate.duration / 12} سنة`
+              : `${certificate.duration} شهر`}
           </strong>
-
         </div>
 
-        <div className="flex items-center justify-between">
-
-          <span>
-            💳 دورية الصرف
-          </span>
+        <div
+          className="flex items-center justify-between gap-2"
+          style={{ marginBottom: layout.detailGap }}
+        >
+          <span>💳 دورية الصرف</span>
 
           <strong>
             {getPeriodLabel(certificate.type)}
           </strong>
-
         </div>
 
-        <div className="flex items-center justify-between">
-
-          <span>
-            📈 نوع العائد
-          </span>
+        <div
+          className="flex items-center justify-between gap-2"
+          style={{ marginBottom: layout.detailGap }}
+        >
+          <span>📈 نوع العائد</span>
 
           <strong>
             {getReturnTypeLabel(
               certificate.returnType
             )}
           </strong>
-
         </div>
 
-        <div className="flex items-center justify-between">
-
-          <span>
-            💰 الحد الأدنى
-          </span>
+        <div className="flex items-center justify-between gap-2">
+          <span>💰 الحد الأدنى</span>
 
           <strong>
             {certificate.minAmount.toLocaleString(
@@ -143,92 +178,100 @@ export default function CertificateCard({
             )}{" "}
             جنيه
           </strong>
-
         </div>
-
       </div>
-            {/* ===========================
-          Graduated Rates
-      =========================== */}
 
       {isGraduated && (
         <>
-          <div className="my-5 border-t" />
+          <div
+            className="border-t"
+            style={{
+              marginTop: layout.dividerY,
+              marginBottom: layout.dividerY,
+            }}
+          />
 
-          <div className="space-y-2">
-
+          <div>
             <h4
-              className={`text-center text-sm font-bold ${theme.title}`}
+              className={`text-center font-bold ${theme.title}`}
+              style={{
+                fontSize: layout.detailText,
+                marginBottom: layout.detailGap,
+              }}
             >
               جدول العائد المتدرج
             </h4>
 
-            <div className="rounded-xl bg-muted/40 p-3">
-
-              <div className="flex items-center justify-between py-1">
-
+            <div
+              className="rounded-xl bg-muted/40"
+              style={{
+                padding: layout.cardPadding / 2,
+                fontSize: layout.detailText,
+              }}
+            >
+              <div className="flex justify-between">
                 <span>السنة الأولى</span>
-
                 <strong>
                   {certificate.graduatedRates!.year1}%
                 </strong>
-
               </div>
 
-              <div className="border-t my-2" />
+              <div className="my-1 border-t" />
 
-              <div className="flex items-center justify-between py-1">
-
+              <div className="flex justify-between">
                 <span>السنة الثانية</span>
-
                 <strong>
                   {certificate.graduatedRates!.year2}%
                 </strong>
-
               </div>
 
-              <div className="border-t my-2" />
+              <div className="my-1 border-t" />
 
-              <div className="flex items-center justify-between py-1">
-
+              <div className="flex justify-between">
                 <span>السنة الثالثة</span>
-
                 <strong>
                   {certificate.graduatedRates!.year3}%
                 </strong>
-
               </div>
-
             </div>
-
           </div>
         </>
       )}
-
-      {/* ===========================
-          Description
-      =========================== */}
 
       {showDescription && (
         <>
-          <div className="my-5 border-t" />
+          <div
+            className="border-t"
+            style={{
+              marginTop: layout.dividerY,
+              marginBottom: layout.dividerY,
+            }}
+          />
 
-          <div>
+          <h4
+            className={`font-bold ${theme.title}`}
+            style={{
+              fontSize: layout.detailText,
+              marginBottom: layout.detailGap,
+            }}
+          >
+            نبذة
+          </h4>
 
-            <h4
-              className={`mb-2 text-sm font-bold ${theme.title}`}
-            >
-              نبذة
-            </h4>
-
-            <p className="text-xs leading-6 text-muted-foreground">
-              {certificate.description}
-            </p>
-
-          </div>
+          <p
+            className="text-muted-foreground"
+            style={{
+              fontSize: Math.max(
+                8,
+                layout.detailText - 2
+              ),
+              lineHeight: 1.7,
+            }}
+          >
+            {certificate.description}
+          </p>
         </>
       )}
-
     </div>
   );
 }

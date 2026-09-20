@@ -190,11 +190,10 @@ export default function CertificateSelection({
 
                           <span>
 
-                            📈 {certificate.returnType === "fixed"
-                              ? "ثابت"
-                              : certificate.returnType === "graduated"
-                              ? "متدرج"
-                              : "متغير"}
+                            📈 {getReturnTypeLabel(
+                              certificate.returnType,
+                              certificate.compound
+                            )}
 
                           </span>
 

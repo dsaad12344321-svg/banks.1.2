@@ -72,7 +72,7 @@ export default function CertificatesPosterClient({
       // لا نستخدم قائمة الشهادات القديمة المخزنة في Local Storage
       // لأنها قد لا تحتوي على الشهادات التي أُضيفت حديثًا.
       // نحتفظ فقط بحالة التفعيل للشهادات الموجودة بنفس الـ ID.
-      const savedCertificates = new Map(
+      const savedCertificates = new Map<string, boolean>(
         (parsed?.banks ?? []).flatMap((bank: PosterBank) =>
           (bank.certificates ?? []).map((certificate) => [
             certificate.id,

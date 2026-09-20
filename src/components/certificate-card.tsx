@@ -152,7 +152,7 @@ export default function CertificateCard({
           <span>💳 دورية الصرف</span>
 
           <strong>
-            {getPeriodLabel(certificate.type)}
+            {certificate.compound ? "في نهاية المدة" : getPeriodLabel(certificate.type)}
           </strong>
         </div>
 
@@ -164,7 +164,8 @@ export default function CertificateCard({
 
           <strong>
             {getReturnTypeLabel(
-              certificate.returnType
+              certificate.returnType,
+              certificate.compound
             )}
           </strong>
         </div>

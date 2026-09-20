@@ -67,6 +67,29 @@ export default function CertificatesPosterClient({
     try {
       const parsed = JSON.parse(saved);
 
+      const freshBanks = createPosterBanks(banks);
+
+      // لا نستخدم قائمة الشهادات القديمة المخزنة في Local Storage
+      // لأنها قد لا تحتوي على الشهادات التي أُضيفت حديثًا.
+      // نحتفظ فقط بحالة التفعيل للشهادات الموجودة بنفس الـ ID.
+      const savedCertificates = new Map(
+        (parsed?.banks ?? []).flatMap((bank: PosterBank) =>
+          (bank.certificates ?? []).map((certificate) => [
+            certificate.id,
+            Boolean(certificate.enabled),
+          ])
+        )
+      );
+
+      const mergedBanks = freshBanks.map((bank) => ({
+        ...bank,
+        certificates: bank.certificates.map((certificate) => ({
+          ...certificate,
+          enabled:
+            savedCertificates.get(certificate.id) ?? false,
+        })),
+      }));
+
       const size =
         parsed?.size &&
         parsed.size in POSTER_SIZES
@@ -74,10 +97,18 @@ export default function CertificatesPosterClient({
           : "story";
 
       setSettings({
-        ...parsed,
+        issueDate: parsed?.issueDate ?? new Date().toISOString().slice(0, 10),
+        theme: parsed?.theme ?? "green",
         size,
+        banks: mergedBanks,
       });
-    } catch {}
+    } catch {
+      // في حالة وجود إعدادات قديمة تالفة، نبدأ ببيانات الشهادات الحالية.
+      setSettings((prev) => ({
+        ...prev,
+        banks: createPosterBanks(banks),
+      }));
+    }
 
   }, []);
 

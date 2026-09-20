@@ -17,6 +17,8 @@ export interface Certificate {
   name: string;
   duration: number;
   interestRate: number;
+  minimumRate?: number;
+  compound?: boolean;
 
   returnType:
     | "fixed"
@@ -306,8 +308,10 @@ export function getEnabledCertificates(
 =========================================== */
 
 export function getReturnTypeLabel(
-  type: Certificate["returnType"]
+  type: Certificate["returnType"],
+  compound = false
 ): string {
+  if (compound) return "تراكمي";
   switch (type) {
     case "fixed":
       return "ثابت";
@@ -359,10 +363,10 @@ export function generateCaption(
   certificates.forEach((item) => {
     lines.push(`🏦 ${item.bankName}`);
     lines.push(`📌 ${item.name}`);
-    lines.push(`💰 العائد: ${item.interestRate}%`);
+    lines.push(`💰 العائد: ${item.interestRate}%`);\n\n    if (item.minimumRate !== undefined) {\n      lines.push(`🔻 الحد الأدنى للعائد: ${item.minimumRate}%`);\n    }
     lines.push(`⏳ المدة: ${item.duration / 12} سنوات`);
     lines.push(`💳 دورية الصرف: ${getPeriodLabel(item.type)}`);
-    lines.push(`📊 نوع العائد: ${getReturnTypeLabel(item.returnType)}`);
+    lines.push(`📊 نوع العائد: ${getReturnTypeLabel(item.returnType, item.compound)}`);
 
     if (
       item.returnType === "graduated" &&

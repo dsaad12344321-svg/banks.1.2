@@ -15,6 +15,8 @@ interface Certificate {
   duration: number;
   interestRate: number;
   returnType: 'fixed' | 'variable' | 'graduated';
+  compound?: boolean;
+  minimumRate?: number;
   graduatedRates?: {
     year1: number;
     year2: number;
@@ -57,7 +59,11 @@ export default function CalculatorClient({ banks, loading, error }: { banks: Ban
     const principal = parseFloat(amount);
     let totalProfit = 0;
 
-    if (certificate.returnType === 'graduated' && certificate.graduatedRates) {
+    if (certificate.compound) {
+      const years = certificate.duration / 12;
+      const totalAmount = principal * Math.pow(1 + certificate.interestRate / 100, years);
+      totalProfit = totalAmount - principal;
+    } else if (certificate.returnType === 'graduated' && certificate.graduatedRates) {
       // Check if it's annual graduated certificate
       if (certificate.type === 'annual') {
         // Annual graduated certificate - YEARLY profit only
@@ -205,7 +211,7 @@ export default function CalculatorClient({ banks, loading, error }: { banks: Ban
         
         if (!certificate) return null;
 
-        const monthlyProfit = certificate.returnType === 'fixed' 
+        const monthlyProfit = !certificate.compound && (certificate.returnType === 'fixed' || certificate.returnType === 'variable')
           ? (principal * (certificate.interestRate / 100)) / 12
           : null;
 
@@ -230,7 +236,7 @@ export default function CalculatorClient({ banks, loading, error }: { banks: Ban
               </div>
               
               {/* Monthly profit for fixed certificates */}
-              {certificate.returnType === 'fixed' && monthlyProfit && certificate.type==='monthly' && (
+              {!certificate.compound && (certificate.returnType === 'fixed' || certificate.returnType === 'variable') && monthlyProfit && certificate.type==='monthly' && (
                 <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
                   <p className="text-sm text-green-700 font-medium">الربح الشهري</p>
                   <p className="text-xl font-bold text-green-600">
@@ -239,9 +245,26 @@ export default function CalculatorClient({ banks, loading, error }: { banks: Ban
                   <p className="text-xs text-green-600 mt-1">
                     (شهرياً من {certificate.interestRate}% سنوياً)
                   </p>
+                  {certificate.returnType === 'variable' && certificate.minimumRate && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      الحد الأدنى للعائد السنوي: {certificate.minimumRate}%
+                    </p>
+                  )}
                 </div>
               )}
               
+              {certificate.compound && (
+                <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-sm text-blue-700 font-medium">إجمالي المبلغ في نهاية المدة</p>
+                  <p className="text-xl font-bold text-blue-700">
+                    {result.totalAmount.toLocaleString(undefined, {maximumFractionDigits: 2})} ج.م
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    أصل المبلغ × (1 + العائد) ^ عدد السنوات
+                  </p>
+                </div>
+              )}
+
               {/* Quarterly profit for fixed certificates */}
               {certificate.returnType === 'fixed' && certificate.type==='quarterly' && monthlyProfit && (
                 <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">

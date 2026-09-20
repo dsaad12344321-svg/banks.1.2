@@ -20,6 +20,8 @@ interface Certificate {
   duration: number;
   interestRate: number;
   returnType: 'fixed' | 'variable' | 'graduated';
+  compound?: boolean;
+  minimumRate?: number;
   graduatedRates?: {
     year1: number;
     year2: number;
@@ -78,6 +80,11 @@ type ExampleResult =
       total: number;
     }
   | {
+      type: 'compound';
+      totalProfit: number;
+      totalAmount: number;
+    }
+  | {
       type: 'fixed';
       monthly: number;
       total: number;
@@ -85,6 +92,17 @@ type ExampleResult =
 
 function calculateExample(cert: Certificate): ExampleResult {
   const principal = EXAMPLE_AMOUNT;
+
+  // COMPOUND / CUMULATIVE
+  if (cert.compound) {
+    const years = cert.duration / 12;
+    const totalAmount = principal * Math.pow(1 + cert.interestRate / 100, years);
+    return {
+      type: 'compound',
+      totalProfit: totalAmount - principal,
+      totalAmount,
+    };
+  }
 
   // FIXED MONTHLY
   if (cert.returnType === 'fixed' && cert.type === 'monthly') {
@@ -227,6 +245,25 @@ export default function BanksAccordion({
 
                           {(() => {
                             const res = calculateExample(cert);
+
+                            if (res.type === 'compound') {
+                              return (
+                                <div className="space-y-1">
+                                  <p>
+                                    إجمالي الربح:{' '}
+                                    <span className="font-bold text-primary">
+                                      {res.totalProfit.toLocaleString(undefined, { maximumFractionDigits: 2 })} ج.م
+                                    </span>
+                                  </p>
+                                  <p>
+                                    المبلغ في نهاية المدة:{' '}
+                                    <span className="font-bold">
+                                      {res.totalAmount.toLocaleString(undefined, { maximumFractionDigits: 2 })} ج.م
+                                    </span>
+                                  </p>
+                                </div>
+                              );
+                            }
 
                             if (res.type === 'fixed-monthly') {
                               return (

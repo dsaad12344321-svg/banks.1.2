@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { toPng } from "html-to-image";
 
@@ -10,8 +15,6 @@ import {
   Bank,
   PosterSettings,
   PosterBank,
-  PosterTheme,
-  PosterSize,
   POSTER_THEMES,
   POSTER_SIZES,
   createPosterBanks,
@@ -20,18 +23,19 @@ import {
 } from "@/lib/deposits-poster";
 
 import DepositSelection from "@/components/deposit-selection";
+
 import DepositPosterPreview from "@/components/deposit-poster-preview";
 
 interface DepositsPosterClientProps {
   banks: Bank[];
 }
 
-const STORAGE_KEY = "deposits-poster-settings";
+const STORAGE_KEY =
+  "deposits-poster-settings";
 
 export default function DepositsPosterClient({
   banks,
 }: DepositsPosterClientProps) {
-
   const posterRef =
     useRef<HTMLDivElement>(null);
 
@@ -45,9 +49,10 @@ export default function DepositsPosterClient({
 
       size: "story",
 
-      banks: createPosterBanks(
-        banks
-      ),
+      banks:
+        createPosterBanks(banks),
+
+      showPracticalExample: false,
     });
 
   /* ===========================
@@ -55,7 +60,6 @@ export default function DepositsPosterClient({
   =========================== */
 
   useEffect(() => {
-
     const saved =
       localStorage.getItem(
         STORAGE_KEY
@@ -64,7 +68,43 @@ export default function DepositsPosterClient({
     if (!saved) return;
 
     try {
-      const parsed = JSON.parse(saved);
+      const parsed =
+        JSON.parse(saved);
+
+      const freshBanks =
+        createPosterBanks(banks);
+
+      const savedDeposits =
+        new Map<string, boolean>(
+          (parsed?.banks ?? []).flatMap(
+            (bank: PosterBank) =>
+              (bank.deposits ?? []).map(
+                (deposit) => [
+                  deposit.id,
+                  Boolean(
+                    deposit.enabled
+                  ),
+                ]
+              )
+          )
+        );
+
+      const mergedBanks =
+        freshBanks.map((bank) => ({
+          ...bank,
+
+          deposits:
+            bank.deposits.map(
+              (deposit) => ({
+                ...deposit,
+
+                enabled:
+                  savedDeposits.get(
+                    deposit.id
+                  ) ?? false,
+              })
+            ),
+        }));
 
       const size =
         parsed?.size &&
@@ -73,33 +113,52 @@ export default function DepositsPosterClient({
           : "story";
 
       setSettings({
-        ...parsed,
-        size,
-      });
-    } catch {}
+        issueDate:
+          parsed?.issueDate ??
+          new Date()
+            .toISOString()
+            .slice(0, 10),
 
+        theme:
+          parsed?.theme ?? "green",
+
+        size,
+
+        banks: mergedBanks,
+
+        showPracticalExample:
+          Boolean(
+            parsed?.showPracticalExample
+          ),
+      });
+    } catch {
+      setSettings((prev) => ({
+        ...prev,
+
+        banks:
+          createPosterBanks(banks),
+
+        showPracticalExample: false,
+      }));
+    }
   }, []);
 
   useEffect(() => {
-
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(settings)
     );
-
   }, [settings]);
 
   /* ===========================
-      Selected Certificates
+      Selected Deposits
   =========================== */
 
-const selectedDeposits =
+  const selectedDeposits =
     useMemo(() => {
-
       return getEnabledDeposits(
         settings.banks
       );
-
     }, [settings.banks]);
 
   const currentTheme =
@@ -111,6 +170,7 @@ const selectedDeposits =
     POSTER_SIZES[
       settings.size
     ];
+
   /* ===========================
       Update Helpers
   =========================== */
@@ -119,78 +179,66 @@ const selectedDeposits =
     depositId: string,
     enabled: boolean
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
 
-      banks: prev.banks.map((bank) => ({
+      banks: prev.banks.map(
+        (bank) => ({
+          ...bank,
 
-        ...bank,
-
-        deposits:
-          bank.deposits.map(
-            (deposit) =>
-
-              deposit.id ===
-              depositId
-
-                ? {
-                    ...deposit,
-                    enabled,
-                  }
-
-                : deposit
-
-          ),
-
-      })),
-
+          deposits:
+            bank.deposits.map(
+              (deposit) =>
+                deposit.id ===
+                depositId
+                  ? {
+                      ...deposit,
+                      enabled,
+                    }
+                  : deposit
+            ),
+        })
+      ),
     }));
+  }
 
+  function updatePracticalExample(
+    enabled: boolean
+  ) {
+    setSettings((prev) => ({
+      ...prev,
+      showPracticalExample:
+        enabled,
+    }));
   }
 
   function updateTheme(
     theme: PosterSettings["theme"]
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       theme,
-
     }));
-
   }
 
   function updateSize(
     size: PosterSettings["size"]
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       size,
-
     }));
-
   }
 
   function updateDate(
     issueDate: string
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       issueDate,
-
     }));
-
   }
+
   /* ===========================
       Download Poster
   =========================== */
@@ -199,23 +247,31 @@ const selectedDeposits =
     if (!posterRef.current) return;
 
     try {
-      const node = posterRef.current;
+      const dataUrl =
+        await toPng(
+          posterRef.current,
+          {
+            pixelRatio: 1,
+            cacheBust: true,
 
-      const dataUrl = await toPng(node, {
-        pixelRatio: 1,
-        cacheBust: true,
+            width:
+              currentSize.previewWidth,
 
-        width: currentSize.previewWidth,
-        height: currentSize.previewHeight,
+            height:
+              currentSize.previewHeight,
 
-        canvasWidth: currentSize.width,
-        canvasHeight: currentSize.height,
+            canvasWidth:
+              currentSize.width,
 
-        style: {
-          margin: "0",
-          transform: "none",
-        },
-      });
+            canvasHeight:
+              currentSize.height,
+
+            style: {
+              margin: "0",
+              transform: "none",
+            },
+          }
+        );
 
       const link =
         document.createElement("a");
@@ -239,95 +295,106 @@ const selectedDeposits =
     }
   }
 
-  /*=============================
+  /* ===========================
       Sender
-  ==============================*/
+  =========================== */
+
   async function sendToSocialDashboard() {
-  if (!posterRef.current) return;
+    if (!posterRef.current) return;
 
-  if (!window.opener) {
-    toast.error(
-      "افتح منشئ البوست من Social Dashboard أولاً"
-    );
-    return;
+    if (!window.opener) {
+      toast.error(
+        "افتح منشئ البوست من Social Dashboard أولاً"
+      );
+      return;
+    }
+
+    try {
+      const image =
+        await toPng(
+          posterRef.current,
+          {
+            pixelRatio: 1,
+            cacheBust: true,
+
+            width:
+              currentSize.previewWidth,
+
+            height:
+              currentSize.previewHeight,
+
+            canvasWidth:
+              currentSize.width,
+
+            canvasHeight:
+              currentSize.height,
+
+            style: {
+              margin: "0",
+              transform: "none",
+            },
+          }
+        );
+
+      const caption =
+        generateCaption(
+          settings.issueDate,
+          selectedDeposits,
+          settings.showPracticalExample
+        );
+
+      window.opener.postMessage(
+        {
+          type:
+            "DALEELAK_SOCIAL_POST",
+
+          source:
+            "deposits",
+
+          title:
+            "ودائع البنوك المصرية",
+
+          caption,
+
+          image,
+        },
+        "*"
+      );
+
+      toast.success(
+        "تم إرسال البوستر والكابشن إلى Social Dashboard"
+      );
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        "تعذر إرسال البوست إلى Social Dashboard"
+      );
+    }
   }
-
-  try {
-    const node = posterRef.current;
-
-    const image = await toPng(node, {
-      pixelRatio: 1,
-      cacheBust: true,
-
-      width: currentSize.previewWidth,
-      height: currentSize.previewHeight,
-
-      canvasWidth: currentSize.width,
-      canvasHeight: currentSize.height,
-
-      style: {
-        margin: "0",
-        transform: "none",
-      },
-    });
-
-    const caption = generateCaption(
-      settings.issueDate,
-      selectedDeposits
-    );
-
-    window.opener.postMessage(
-      {
-        type: "DALEELAK_SOCIAL_POST",
-        source: "deposits",
-        title: "ودائع البنوك المصرية",
-        caption,
-        image,
-      },
-      "*"
-    );
-
-    toast.success(
-      "تم إرسال البوستر والكابشن إلى Social Dashboard"
-    );
-  } catch (error) {
-    console.error(error);
-
-    toast.error(
-      "تعذر إرسال البوست إلى Social Dashboard"
-    );
-  }
-}
 
   /* ===========================
       Copy Caption
   =========================== */
 
   async function copyCaption() {
-
     try {
-
       await navigator.clipboard.writeText(
-
         generateCaption(
-            settings.issueDate,
-            selectedDeposits
+          settings.issueDate,
+          selectedDeposits,
+          settings.showPracticalExample
         )
-
       );
 
       toast.success(
         "تم نسخ النص"
       );
-
     } catch {
-
       toast.error(
         "تعذر نسخ النص"
       );
-
     }
-
   }
 
   /* ===========================
@@ -335,9 +402,7 @@ const selectedDeposits =
   =========================== */
 
   function resetSettings() {
-
     setSettings({
-
       issueDate: new Date()
         .toISOString()
         .slice(0, 10),
@@ -346,31 +411,25 @@ const selectedDeposits =
 
       size: "story",
 
-      banks: createPosterBanks(
-        banks
-      ),
+      banks:
+        createPosterBanks(banks),
 
+      showPracticalExample: false,
     });
 
     toast.success(
       "تم إعادة ضبط الإعدادات"
     );
-
   }
+
   /* ===========================
       UI
   =========================== */
 
   return (
-
     <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
 
-      {/* =======================================
-          Control Panel
-      ======================================= */}
-
       <DepositSelection
-
         banks={settings.banks}
 
         settings={settings}
@@ -379,6 +438,10 @@ const selectedDeposits =
 
         updateDeposit={
           updateDeposit
+        }
+
+        updatePracticalExample={
+          updatePracticalExample
         }
 
         updateTheme={updateTheme}
@@ -391,31 +454,26 @@ const selectedDeposits =
 
         copyCaption={copyCaption}
 
-        sendToSocialDashboard={sendToSocialDashboard}
-        
+        sendToSocialDashboard={
+          sendToSocialDashboard
+        }
+
         resetSettings={
           resetSettings
         }
-
       />
 
-      {/* =======================================
-          Poster Preview
-      ======================================= */}
-
       <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
-
-          <DepositPosterPreview
-            posterRef={posterRef}
-            settings={settings}
-            deposits={selectedDeposits}
-            theme={currentTheme}
-          />
-
+        <DepositPosterPreview
+          posterRef={posterRef}
+          settings={settings}
+          deposits={
+            selectedDeposits
+          }
+          theme={currentTheme}
+        />
       </div>
 
     </div>
-
   );
-
-}    
+}

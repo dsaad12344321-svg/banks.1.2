@@ -5,15 +5,14 @@ import Image from "next/image";
 
 import CertificateCard from "@/components/certificate-card";
 
-import {
-  getPosterLayout,
-} from "@/lib/poster-layout";
+import { getPosterLayout } from "@/lib/poster-layout";
 
 import {
   PosterCertificate,
   PosterSettings,
   PosterThemeConfig,
   POSTER_SIZES,
+  generatePracticalExample,
 } from "@/lib/certificates-poster";
 
 import { usePosterFit } from "@/hooks/use-poster-fit";
@@ -72,8 +71,6 @@ export default function CertificatePosterPreview({
       >
         {/* =====================================================
             Smart Fit Container
-            يقوم بتصغير المحتوى تلقائياً إذا كان أكبر من المقاس
-            المختار، بدون قص أي جزء من البوستر.
         ===================================================== */}
         <div
           ref={contentRef}
@@ -92,7 +89,6 @@ export default function CertificatePosterPreview({
           {/* ===========================
               Header
           =========================== */}
-
           <div
             className={`${theme.header} text-center text-white`}
             style={{
@@ -145,7 +141,6 @@ export default function CertificatePosterPreview({
           {/* ===========================
               Date
           =========================== */}
-
           <div
             className="text-center"
             style={{
@@ -171,12 +166,11 @@ export default function CertificatePosterPreview({
             >
               {settings.issueDate}
             </h2>
-          </div>  
+          </div>
 
           {/* ===========================
               Grid
           =========================== */}
-
           <div
             className={`grid ${columns}`}
             style={{
@@ -187,44 +181,78 @@ export default function CertificatePosterPreview({
             }}
           >
             {certificates.map((certificate) => (
-              <CertificateCard
-                key={certificate.id}
-                certificate={certificate}
-                theme={theme}
-                size={settings.size}
-              />
+              <div key={certificate.id}>
+                <CertificateCard
+                  certificate={certificate}
+                  theme={theme}
+                  size={settings.size}
+                />
+
+                {/* ===========================
+                    Practical Example
+                =========================== */}
+                {settings.showPracticalExample && (
+                  <div
+                    className="mt-2 rounded-xl border bg-white text-center shadow-sm"
+                    style={{
+                      padding: `${Math.max(8, layout.gridGap / 2)}px`,
+                    }}
+                    dir="rtl"
+                  >
+                    <div
+                      className={`font-extrabold ${theme.title}`}
+                      style={{
+                        fontSize: Math.max(12, layout.dateLabel),
+                        marginBottom: 4,
+                      }}
+                    >
+                     
+                    </div>
+
+                    <div
+                      className="text-gray-700"
+                      style={{
+                        fontSize: Math.max(9, layout.footerText),
+                        lineHeight: 1.6,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {generatePracticalExample(certificate)}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
           {/* ===========================
               Footer
           =========================== */}
+          <div
+            className="border-t bg-white text-center"
+            style={{
+              padding: `${layout.footerY}px ${layout.footerX}px`,
+            }}
+          >
+            <div
+              className="font-bold"
+              style={{
+                fontSize: layout.footerTitle,
+              }}
+            >
+              تطبيق دليلك البنكى
+            </div>
 
-      <div
-        className="border-t bg-white text-center"
-        style={{
-          padding: `${layout.footerY}px ${layout.footerX}px`,
-        }}
-      >
-        <div
-          className="font-bold"
-          style={{
-            fontSize: layout.footerTitle,
-          }}
-        >
-          تطبيق دليلك البنكى
-        </div>
-
-        <div
-          className="text-muted-foreground"
-          style={{
-            marginTop: layout.footerTextTop,
-            fontSize: layout.footerText,
-          }}
-        >
-          daleelakelbanky.vercel.app
-        </div>
-      </div>
+            <div
+              className="text-muted-foreground"
+              style={{
+                marginTop: layout.footerTextTop,
+                fontSize: layout.footerText,
+              }}
+            >
+              daleelakelbanky.vercel.app
+            </div>
+          </div>
         </div>
       </div>
     </div>

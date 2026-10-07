@@ -30,6 +30,10 @@ interface CertificateSelectionProps {
     selected: boolean
   ) => void;
 
+  updatePracticalExample: (
+    enabled: boolean
+  ) => void;
+
   sendToSocialDashboard: () => void;
 
   updateTheme: (
@@ -52,6 +56,7 @@ export default function CertificateSelection({
   settings,
   updateDate,
   updateCertificate,
+  updatePracticalExample,
   updateTheme,
   updateSize,
   downloadPoster,
@@ -59,11 +64,8 @@ export default function CertificateSelection({
   sendToSocialDashboard,
   resetSettings,
 }: CertificateSelectionProps) {
-
   return (
-
     <Card className="p-6">
-
       <div className="space-y-6">
 
         {/* ===========================
@@ -71,50 +73,65 @@ export default function CertificateSelection({
         =========================== */}
 
         <div>
-
           <Label className="mb-2 block">
-
             تاريخ المنشور
-
           </Label>
 
           <Input
             type="date"
             value={settings.issueDate}
             onChange={(e) =>
-              updateDate(
-                e.target.value
+              updateDate(e.target.value)
+            }
+          />
+        </div>
+
+        {/* ===========================
+            Practical Example
+        =========================== */}
+
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-muted/40">
+          <input
+            type="checkbox"
+            className="mt-1 h-4 w-4"
+            checked={
+              settings.showPracticalExample
+            }
+            onChange={(e) =>
+              updatePracticalExample(
+                e.target.checked
               )
             }
           />
 
-        </div>
+          <div>
+            <div className="font-semibold">
+              إظهار مثال عملي
+            </div>
+
+            <p className="mt-1 text-xs text-muted-foreground">
+              إضافة مثال محسوب على مبلغ
+              100,000 جنيه إلى نص المنشور.
+            </p>
+          </div>
+        </label>
 
         {/* ===========================
             Certificates
         =========================== */}
 
         <div>
-
           <Label className="mb-4 block">
-
             اختر الشهادات
-
           </Label>
 
           <div className="space-y-4">
-
             {banks.map((bank) => (
-
               <Card
                 key={bank.id}
                 className="p-4"
               >
-
-                {/* Bank Header */}
-
                 <div className="mb-4 flex items-center gap-3">
-
                   <Image
                     src={bank.logo}
                     alt={bank.name}
@@ -123,152 +140,114 @@ export default function CertificateSelection({
                   />
 
                   <div>
-
                     <h3 className="font-bold">
-
                       {bank.name}
-
                     </h3>
 
                     <p className="text-xs text-muted-foreground">
-
                       {bank.certificates.length} شهادة
-
                     </p>
-
                   </div>
-
                 </div>
-
-                {/* Certificates */}
 
                 <div className="space-y-3">
-                          {bank.certificates.map((certificate) => (
+                  {bank.certificates.map(
+                    (certificate) => (
+                      <label
+                        key={certificate.id}
+                        className="flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors hover:bg-muted/40"
+                      >
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-4 w-4"
+                          checked={
+                            certificate.enabled
+                          }
+                          onChange={(e) =>
+                            updateCertificate(
+                              certificate.id,
+                              e.target.checked
+                            )
+                          }
+                        />
 
-                    <label
-                      key={certificate.id}
-                      className="
-                        flex
-                        cursor-pointer
-                        items-start
-                        gap-3
-                        rounded-xl
-                        border
-                        p-3
-                        transition-colors
-                        hover:bg-muted/40
-                      "
-                    >
+                        <div className="flex-1">
+                          <div className="font-semibold">
+                            {certificate.name}
+                          </div>
 
-                      <input
-                        type="checkbox"
-                        className="mt-1 h-4 w-4"
-                        checked={certificate.enabled}
-                        onChange={(e) =>
-                          updateCertificate(
-                            certificate.id,
-                            e.target.checked
-                          )
-                        }
-                      />
+                          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                            <span>
+                              💰{" "}
+                              {
+                                certificate.interestRate
+                              }
+                              %
+                            </span>
 
-                      <div className="flex-1">
+                            <span>
+                              📈{" "}
+                              {getReturnTypeLabel(
+                                certificate.returnType,
+                                certificate.compound
+                              )}
+                            </span>
 
-                        <div className="font-semibold">
+                            <span>
+                              💳{" "}
+                              {getPeriodLabel(
+                                certificate.type
+                              )}
+                            </span>
 
-                          {certificate.name}
-
+                            <span>
+                              ⏳{" "}
+                              {certificate.duration /
+                                12}{" "}
+                              سنوات
+                            </span>
+                          </div>
                         </div>
-
-                        <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-
-                          <span>
-
-                            💰 {certificate.interestRate}%
-
-                          </span>
-
-                          <span>
-
-                            📈 {getReturnTypeLabel(
-                              certificate.returnType,
-                              certificate.compound
-                            )}
-
-                          </span>
-
-                          <span>
-
-                            💳 {certificate.type === "monthly"
-                              ? "شهرى"
-                              : certificate.type === "quarterly"
-                              ? "ربع سنوى"
-                              : "سنوى"}
-
-                          </span>
-
-                          <span>
-
-                            ⏳ {certificate.duration / 12} سنوات
-
-                          </span>
-
-                        </div>
-
-                      </div>
-
-                    </label>
-
-                  ))}
-
+                      </label>
+                    )
+                  )}
                 </div>
-
               </Card>
-
             ))}
-
           </div>
-
         </div>
+
         {/* ===========================
             Theme
         =========================== */}
 
         <div>
-
           <Label className="mb-3 block">
-
             لون التصميم
-
           </Label>
 
           <div className="grid grid-cols-3 gap-2">
-
-            {(Object.keys(
-              POSTER_THEMES
-            ) as PosterTheme[]).map(
-              (theme) => (
-
-                <Button
-                  key={theme}
-                  type="button"
-                  variant={
-                    settings.theme === theme
-                      ? "default"
-                      : "outline"
-                  }
-                  onClick={() =>
-                    updateTheme(theme)
-                  }
-                >
-                  {POSTER_THEMES[theme].name}
-                </Button>
-
-              )
-            )}
-
+            {(
+              Object.keys(
+                POSTER_THEMES
+              ) as PosterTheme[]
+            ).map((theme) => (
+              <Button
+                key={theme}
+                type="button"
+                variant={
+                  settings.theme === theme
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() =>
+                  updateTheme(theme)
+                }
+              >
+                {POSTER_THEMES[theme].name}
+              </Button>
+            ))}
           </div>
-
         </div>
 
         {/* ===========================
@@ -276,40 +255,32 @@ export default function CertificateSelection({
         =========================== */}
 
         <div>
-
           <Label className="mb-3 block">
-
             مقاس الصورة
-
           </Label>
 
           <div className="grid grid-cols-2 gap-2">
-
-            {(Object.keys(
-              POSTER_SIZES
-            ) as PosterSize[]).map(
-              (size) => (
-
-                <Button
-                  key={size}
-                  type="button"
-                  variant={
-                    settings.size === size
-                      ? "default"
-                      : "outline"
-                  }
-                  onClick={() =>
-                    updateSize(size)
-                  }
-                >
-                  {POSTER_SIZES[size].label}
-                </Button>
-
-              )
-            )}
-
+            {(
+              Object.keys(
+                POSTER_SIZES
+              ) as PosterSize[]
+            ).map((size) => (
+              <Button
+                key={size}
+                type="button"
+                variant={
+                  settings.size === size
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() =>
+                  updateSize(size)
+                }
+              >
+                {POSTER_SIZES[size].label}
+              </Button>
+            ))}
           </div>
-
         </div>
 
         {/* ===========================
@@ -317,7 +288,6 @@ export default function CertificateSelection({
         =========================== */}
 
         <div className="space-y-2 pt-4">
-
           <Button
             className="w-full"
             onClick={downloadPoster}
@@ -348,13 +318,9 @@ export default function CertificateSelection({
           >
             إعادة ضبط
           </Button>
-
         </div>
 
       </div>
-
     </Card>
-
   );
-
-}        
+}

@@ -18,15 +18,13 @@ export interface Deposit {
   duration: number;
   interestRate: number;
 
-returnType:
-  | "fixed";
+  returnType:
+    | "fixed";
 
-
-
-type:
-  | "monthly"
-  | "maturity"
-  | "upfront";
+  type:
+    | "monthly"
+    | "maturity"
+    | "upfront";
 
   minAmount: number;
 
@@ -47,37 +45,124 @@ export interface Bank {
 =========================================== */
 
 export interface PosterDeposit
-  extends Deposit{
-
+  extends Deposit {
   bankId: string;
-
   bankName: string;
-
   bankLogo: string;
-
   enabled: boolean;
 }
 
 export interface PosterBank {
-
   id: string;
-
   name: string;
-
   logo: string;
-
   deposits: PosterDeposit[];
 }
 
 export interface PosterSettings {
-
   issueDate: string;
-
   theme: PosterTheme;
-
   size: PosterSize;
-
   banks: PosterBank[];
+  showPracticalExample: boolean;
+}
+
+/* ===========================================
+   Practical Example
+=========================================== */
+
+export const PRACTICAL_EXAMPLE_AMOUNT = 100000;
+
+function formatMoney(value: number): string {
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function formatDuration(duration: number): string {
+  if (duration % 12 === 0) {
+    return `${duration / 12} ${
+      duration / 12 === 1
+        ? "سنة"
+        : "سنوات"
+    }`;
+  }
+
+  return `${duration} شهر`;
+}
+
+export function generatePracticalExample(
+  deposit: PosterDeposit
+): string {
+  const amount =
+    PRACTICAL_EXAMPLE_AMOUNT;
+
+  const years =
+    deposit.duration / 12;
+
+  const annualProfit =
+    amount *
+    (deposit.interestRate / 100);
+
+  const totalProfit =
+    annualProfit * years;
+
+  /* =========================================
+     Monthly
+  ========================================= */
+
+  if (deposit.type === "monthly") {
+    const monthlyProfit =
+      annualProfit / 12;
+
+    return [
+     
+      `لو عملت وديعة بـ${formatMoney(
+        amount
+      )} جنيه، هيكون العائد الشهري ${formatMoney(
+        monthlyProfit
+      )} جنيه لمدة ${formatDuration(
+        deposit.duration
+      )}، وإجمالي الأرباح خلال مدة الوديعة حوالي ${formatMoney(
+        totalProfit
+      )} جنيه.`,
+    ].join("\n");
+  }
+
+  /* =========================================
+     Upfront
+  ========================================= */
+
+  if (deposit.type === "upfront") {
+    return [
+      "مثال عملي",
+      `لو عملت وديعة بـ${formatMoney(
+        amount
+      )} جنيه، هيكون إجمالي العائد ${formatMoney(
+        totalProfit
+      )} جنيه، ويتم صرف العائد مقدمًا وفقًا لنظام الوديعة، لمدة ${formatDuration(
+        deposit.duration
+      )}.`,
+    ].join("\n");
+  }
+
+  /* =========================================
+     Maturity
+  ========================================= */
+
+  return [
+    "مثال عملي",
+    `لو عملت وديعة بـ${formatMoney(
+      amount
+    )} جنيه، هيكون إجمالي العائد في نهاية المدة حوالي ${formatMoney(
+      totalProfit
+    )} جنيه، لمدة ${formatDuration(
+      deposit.duration
+    )}، بإجمالي أرباح حوالي ${formatMoney(
+      totalProfit
+    )} جنيه.`,
+  ].join("\n");
 }
 
 /* ===========================================
@@ -85,127 +170,66 @@ export interface PosterSettings {
 =========================================== */
 
 export const POSTER_THEMES = {
-
   green: {
-
     name: "أخضر",
-
     background:
       "bg-gradient-to-br from-emerald-50 to-green-100",
-
     header:
       "bg-gradient-to-r from-emerald-700 to-green-600",
-
-    title:
-      "text-emerald-700",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-emerald-200",
-
-    shadow:
-      "shadow-emerald-100",
+    title: "text-emerald-700",
+    card: "bg-white",
+    border: "border-emerald-200",
+    shadow: "shadow-emerald-100",
   },
 
   blue: {
-
     name: "أزرق",
-
     background:
       "bg-gradient-to-br from-sky-50 to-blue-100",
-
     header:
       "bg-gradient-to-r from-sky-700 to-blue-600",
-
-    title:
-      "text-sky-700",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-sky-200",
-
-    shadow:
-      "shadow-sky-100",
+    title: "text-sky-700",
+    card: "bg-white",
+    border: "border-sky-200",
+    shadow: "shadow-sky-100",
   },
 
   purple: {
-
     name: "بنفسجى",
-
     background:
       "bg-gradient-to-br from-violet-50 to-purple-100",
-
     header:
       "bg-gradient-to-r from-violet-700 to-purple-600",
-
-    title:
-      "text-violet-700",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-violet-200",
-
-    shadow:
-      "shadow-violet-100",
+    title: "text-violet-700",
+    card: "bg-white",
+    border: "border-violet-200",
+    shadow: "shadow-violet-100",
   },
 
   orange: {
-
     name: "برتقالى",
-
     background:
       "bg-gradient-to-br from-orange-50 to-amber-100",
-
     header:
       "bg-gradient-to-r from-orange-700 to-amber-600",
-
-    title:
-      "text-orange-700",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-orange-200",
-
-    shadow:
-      "shadow-orange-100",
+    title: "text-orange-700",
+    card: "bg-white",
+    border: "border-orange-200",
+    shadow: "shadow-orange-100",
   },
 
   red: {
-
     name: "أحمر",
-
     background:
       "bg-gradient-to-br from-red-50 to-rose-100",
-
     header:
       "bg-gradient-to-r from-red-700 to-rose-600",
-
-    title:
-      "text-red-700",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-red-200",
-
-    shadow:
-      "shadow-red-100",
+    title: "text-red-700",
+    card: "bg-white",
+    border: "border-red-200",
+    shadow: "shadow-red-100",
   },
-
 } as const;
-
-/* ===========================================
-   Poster Sizes
-=========================================== */
 
 /* ===========================================
    Poster Sizes
@@ -213,7 +237,8 @@ export const POSTER_THEMES = {
 
 export const POSTER_SIZES = {
   story: {
-    label: "Story 9:16 — 1080×1920 — Default",
+    label:
+      "Story 9:16 — 1080×1920 — Default",
     width: 1080,
     height: 1920,
     previewWidth: 420,
@@ -221,7 +246,8 @@ export const POSTER_SIZES = {
   },
 
   square: {
-    label: "Square 1:1 — 1080×1080",
+    label:
+      "Square 1:1 — 1080×1080",
     width: 1080,
     height: 1080,
     previewWidth: 420,
@@ -229,7 +255,8 @@ export const POSTER_SIZES = {
   },
 
   portrait45: {
-    label: "Portrait 4:5 — 1080×1350",
+    label:
+      "Portrait 4:5 — 1080×1350",
     width: 1080,
     height: 1350,
     previewWidth: 420,
@@ -237,7 +264,8 @@ export const POSTER_SIZES = {
   },
 
   portrait34: {
-    label: "Portrait 3:4 — 1080×1440",
+    label:
+      "Portrait 3:4 — 1080×1440",
     width: 1080,
     height: 1440,
     previewWidth: 420,
@@ -245,7 +273,8 @@ export const POSTER_SIZES = {
   },
 
   landscape: {
-    label: "Landscape 1.91:1 — 1200×627",
+    label:
+      "Landscape 1.91:1 — 1200×627",
     width: 1200,
     height: 627,
     previewWidth: 420,
@@ -260,44 +289,33 @@ export const POSTER_SIZES = {
 export function createPosterBanks(
   banks: Bank[]
 ): PosterBank[] {
-
   return banks.map((bank) => ({
-
     id: bank.id,
-
     name: bank.name,
-
     logo: bank.logo,
 
-    deposits: bank.deposits.map((deposit) => ({
-
-      ...deposit,
-
-      bankId: bank.id,
-
-      bankName: bank.name,
-
-      bankLogo: bank.logo,
-
-      enabled: false,
-
-    })),
-
+    deposits:
+      bank.deposits.map((deposit) => ({
+        ...deposit,
+        bankId: bank.id,
+        bankName: bank.name,
+        bankLogo: bank.logo,
+        enabled: false,
+      })),
   }));
-
 }
 
 export function getEnabledDeposits(
   banks: PosterBank[]
 ): PosterDeposit[] {
-
   return banks.flatMap((bank) =>
     bank.deposits.filter(
-      (deposit) => deposit.enabled
+      (deposit) =>
+        deposit.enabled
     )
   );
-
 }
+
 /* ===========================================
    Labels
 =========================================== */
@@ -317,9 +335,7 @@ export function getReturnTypeLabel(
 export function getPeriodLabel(
   type: Deposit["type"]
 ): string {
-
   switch (type) {
-
     case "monthly":
       return "شهرى";
 
@@ -332,7 +348,6 @@ export function getPeriodLabel(
     default:
       return "";
   }
-
 }
 
 /* ===========================================
@@ -341,37 +356,76 @@ export function getPeriodLabel(
 
 export function generateCaption(
   date: string,
-  deposits: PosterDeposit[]
+  deposits: PosterDeposit[],
+  showPracticalExample = false
 ): string {
   const lines: string[] = [];
 
-  lines.push("🏦 🏦 أفضل الودائع فى البنوك المصرية");
+  lines.push(
+    "🏦 🏦 أفضل الودائع فى البنوك المصرية"
+  );
+
   lines.push("");
-  lines.push(`📅 تاريخ التحديث: ${date}`);
+
+  lines.push(
+    `📅 تاريخ التحديث: ${date}`
+  );
+
   lines.push("");
 
   deposits.forEach((item) => {
     lines.push(`🏦 ${item.bankName}`);
     lines.push(`📌 ${item.name}`);
-    lines.push(`💰 العائد: ${item.interestRate}%`);
-    lines.push(`⏳ المدة: ${item.duration / 12} سنوات`);
-    lines.push(`💳 دورية الصرف: ${getPeriodLabel(item.type)}`);
-    lines.push(`📊 نوع العائد: ${getReturnTypeLabel(item.returnType)}`);
+    lines.push(
+      `💰 العائد: ${item.interestRate}%`
+    );
 
-    
+    lines.push(
+      `⏳ المدة: ${
+        item.duration % 12 === 0
+          ? `${item.duration / 12} سنوات`
+          : `${item.duration} شهر`
+      }`
+    );
+
+    lines.push(
+      `💳 دورية الصرف: ${getPeriodLabel(
+        item.type
+      )}`
+    );
+
+    lines.push(
+      `📊 نوع العائد: ${getReturnTypeLabel(
+        item.returnType
+      )}`
+    );
+
     lines.push(
       `💵 الحد الأدنى: ${item.minAmount.toLocaleString(
         "ar-EG"
       )} جنيه`
     );
 
+    if (showPracticalExample) {
+      lines.push("");
+      lines.push(
+        generatePracticalExample(item)
+      );
+    }
+
     lines.push("");
   });
 
-  lines.push("احسب أرباح جميع الودائع مجانًا");
-  lines.push("https://daleelakelbanky.vercel.app");
+  lines.push(
+    "احسب أرباح جميع الودائع مجانًا"
+  );
+
+  lines.push(
+    "https://daleelakelbanky.vercel.app"
+  );
 
   return lines.join("\n");
 }
+
 export type PosterThemeConfig =
   (typeof POSTER_THEMES)[PosterTheme];

@@ -10,6 +10,7 @@ import {
   PosterSettings,
   PosterThemeConfig,
   POSTER_SIZES,
+  generatePracticalExample,
 } from "@/lib/deposits-poster";
 
 import { getPosterLayout } from "@/lib/poster-layout";
@@ -167,12 +168,47 @@ export default function DepositPosterPreview({
             }}
           >
             {deposits.map((deposit) => (
-              <DepositCard
-                key={deposit.id}
-                deposit={deposit}
-                theme={theme}
-                size={settings.size}
-              />
+              <div key={deposit.id}>
+                <DepositCard
+                  deposit={deposit}
+                  theme={theme}
+                  size={settings.size}
+                />
+
+                {/* ===========================
+                    Practical Example
+                =========================== */}
+                {settings.showPracticalExample && (
+                  <div
+                    className="mt-2 rounded-xl border bg-white text-center shadow-sm"
+                    style={{
+                      padding: `${Math.max(8, layout.gridGap / 2)}px`,
+                    }}
+                    dir="rtl"
+                  >
+                    <div
+                      className={`font-extrabold ${theme.title}`}
+                      style={{
+                        fontSize: Math.max(12, layout.dateLabel),
+                        marginBottom: 4,
+                      }}
+                    >
+                     
+                    </div>
+
+                    <div
+                      className="text-gray-700"
+                      style={{
+                        fontSize: Math.max(9, layout.footerText),
+                        lineHeight: 1.6,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {generatePracticalExample(deposit)}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 

@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { toPng } from "html-to-image";
 
@@ -10,8 +15,6 @@ import {
   Bank,
   PosterSettings,
   PosterBank,
-  PosterTheme,
-  PosterSize,
   POSTER_THEMES,
   POSTER_SIZES,
   createPosterBanks,
@@ -27,12 +30,12 @@ interface CertificatesPosterClientProps {
   banks: Bank[];
 }
 
-const STORAGE_KEY = "certificates-poster-settings";
+const STORAGE_KEY =
+  "certificates-poster-settings";
 
 export default function CertificatesPosterClient({
   banks,
 }: CertificatesPosterClientProps) {
-
   const posterRef =
     useRef<HTMLDivElement>(null);
 
@@ -49,6 +52,8 @@ export default function CertificatesPosterClient({
       banks: createPosterBanks(
         banks
       ),
+
+      showPracticalExample: false,
     });
 
   /* ===========================
@@ -56,7 +61,6 @@ export default function CertificatesPosterClient({
   =========================== */
 
   useEffect(() => {
-
     const saved =
       localStorage.getItem(
         STORAGE_KEY
@@ -65,30 +69,43 @@ export default function CertificatesPosterClient({
     if (!saved) return;
 
     try {
-      const parsed = JSON.parse(saved);
+      const parsed =
+        JSON.parse(saved);
 
-      const freshBanks = createPosterBanks(banks);
+      const freshBanks =
+        createPosterBanks(banks);
 
-      // لا نستخدم قائمة الشهادات القديمة المخزنة في Local Storage
-      // لأنها قد لا تحتوي على الشهادات التي أُضيفت حديثًا.
-      // نحتفظ فقط بحالة التفعيل للشهادات الموجودة بنفس الـ ID.
-      const savedCertificates = new Map<string, boolean>(
-        (parsed?.banks ?? []).flatMap((bank: PosterBank) =>
-          (bank.certificates ?? []).map((certificate) => [
-            certificate.id,
-            Boolean(certificate.enabled),
-          ])
-        )
-      );
+      const savedCertificates =
+        new Map<string, boolean>(
+          (parsed?.banks ?? []).flatMap(
+            (bank: PosterBank) =>
+              (bank.certificates ?? []).map(
+                (certificate) => [
+                  certificate.id,
+                  Boolean(
+                    certificate.enabled
+                  ),
+                ]
+              )
+          )
+        );
 
-      const mergedBanks = freshBanks.map((bank) => ({
-        ...bank,
-        certificates: bank.certificates.map((certificate) => ({
-          ...certificate,
-          enabled:
-            savedCertificates.get(certificate.id) ?? false,
-        })),
-      }));
+      const mergedBanks =
+        freshBanks.map((bank) => ({
+          ...bank,
+
+          certificates:
+            bank.certificates.map(
+              (certificate) => ({
+                ...certificate,
+
+                enabled:
+                  savedCertificates.get(
+                    certificate.id
+                  ) ?? false,
+              })
+            ),
+        }));
 
       const size =
         parsed?.size &&
@@ -97,28 +114,41 @@ export default function CertificatesPosterClient({
           : "story";
 
       setSettings({
-        issueDate: parsed?.issueDate ?? new Date().toISOString().slice(0, 10),
-        theme: parsed?.theme ?? "green",
+        issueDate:
+          parsed?.issueDate ??
+          new Date()
+            .toISOString()
+            .slice(0, 10),
+
+        theme:
+          parsed?.theme ?? "green",
+
         size,
+
         banks: mergedBanks,
+
+        showPracticalExample:
+          Boolean(
+            parsed?.showPracticalExample
+          ),
       });
     } catch {
-      // في حالة وجود إعدادات قديمة تالفة، نبدأ ببيانات الشهادات الحالية.
       setSettings((prev) => ({
         ...prev,
-        banks: createPosterBanks(banks),
+
+        banks:
+          createPosterBanks(banks),
+
+        showPracticalExample: false,
       }));
     }
-
   }, []);
 
   useEffect(() => {
-
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify(settings)
     );
-
   }, [settings]);
 
   /* ===========================
@@ -127,11 +157,9 @@ export default function CertificatesPosterClient({
 
   const selectedCertificates =
     useMemo(() => {
-
       return getEnabledCertificates(
         settings.banks
       );
-
     }, [settings.banks]);
 
   const currentTheme =
@@ -143,6 +171,7 @@ export default function CertificatesPosterClient({
     POSTER_SIZES[
       settings.size
     ];
+
   /* ===========================
       Update Helpers
   =========================== */
@@ -151,78 +180,66 @@ export default function CertificatesPosterClient({
     certificateId: string,
     enabled: boolean
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
 
-      banks: prev.banks.map((bank) => ({
+      banks: prev.banks.map(
+        (bank) => ({
+          ...bank,
 
-        ...bank,
-
-        certificates:
-          bank.certificates.map(
-            (certificate) =>
-
-              certificate.id ===
-              certificateId
-
-                ? {
-                    ...certificate,
-                    enabled,
-                  }
-
-                : certificate
-
-          ),
-
-      })),
-
+          certificates:
+            bank.certificates.map(
+              (certificate) =>
+                certificate.id ===
+                certificateId
+                  ? {
+                      ...certificate,
+                      enabled,
+                    }
+                  : certificate
+            ),
+        })
+      ),
     }));
+  }
 
+  function updatePracticalExample(
+    enabled: boolean
+  ) {
+    setSettings((prev) => ({
+      ...prev,
+      showPracticalExample:
+        enabled,
+    }));
   }
 
   function updateTheme(
     theme: PosterSettings["theme"]
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       theme,
-
     }));
-
   }
 
   function updateSize(
     size: PosterSettings["size"]
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       size,
-
     }));
-
   }
 
   function updateDate(
     issueDate: string
   ) {
-
     setSettings((prev) => ({
-
       ...prev,
-
       issueDate,
-
     }));
-
   }
+
   /* ===========================
       Download Poster
   =========================== */
@@ -231,23 +248,31 @@ export default function CertificatesPosterClient({
     if (!posterRef.current) return;
 
     try {
-      const node = posterRef.current;
+      const dataUrl =
+        await toPng(
+          posterRef.current,
+          {
+            pixelRatio: 1,
+            cacheBust: true,
 
-      const dataUrl = await toPng(node, {
-        pixelRatio: 1,
-        cacheBust: true,
+            width:
+              currentSize.previewWidth,
 
-        width: currentSize.previewWidth,
-        height: currentSize.previewHeight,
+            height:
+              currentSize.previewHeight,
 
-        canvasWidth: currentSize.width,
-        canvasHeight: currentSize.height,
+            canvasWidth:
+              currentSize.width,
 
-        style: {
-          margin: "0",
-          transform: "none",
-        },
-      });
+            canvasHeight:
+              currentSize.height,
+
+            style: {
+              margin: "0",
+              transform: "none",
+            },
+          }
+        );
 
       const link =
         document.createElement("a");
@@ -271,95 +296,106 @@ export default function CertificatesPosterClient({
     }
   }
 
-  /*===============================
-       Sender
-  ==============================*/
+  /* ===========================
+      Sender
+  =========================== */
+
   async function sendToSocialDashboard() {
-  if (!posterRef.current) return;
+    if (!posterRef.current) return;
 
-  if (!window.opener) {
-    toast.error(
-      "افتح منشئ البوست من Social Dashboard أولاً"
-    );
-    return;
+    if (!window.opener) {
+      toast.error(
+        "افتح منشئ البوست من Social Dashboard أولاً"
+      );
+      return;
+    }
+
+    try {
+      const image =
+        await toPng(
+          posterRef.current,
+          {
+            pixelRatio: 1,
+            cacheBust: true,
+
+            width:
+              currentSize.previewWidth,
+
+            height:
+              currentSize.previewHeight,
+
+            canvasWidth:
+              currentSize.width,
+
+            canvasHeight:
+              currentSize.height,
+
+            style: {
+              margin: "0",
+              transform: "none",
+            },
+          }
+        );
+
+      const caption =
+        generateCaption(
+          settings.issueDate,
+          selectedCertificates,
+          settings.showPracticalExample
+        );
+
+      window.opener.postMessage(
+        {
+          type:
+            "DALEELAK_SOCIAL_POST",
+
+          source:
+            "certificates",
+
+          title:
+            "شهادات البنوك المصرية",
+
+          caption,
+
+          image,
+        },
+        "*"
+      );
+
+      toast.success(
+        "تم إرسال البوستر والكابشن إلى Social Dashboard"
+      );
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        "تعذر إرسال البوست إلى Social Dashboard"
+      );
+    }
   }
-
-  try {
-    const node = posterRef.current;
-
-    const image = await toPng(node, {
-      pixelRatio: 1,
-      cacheBust: true,
-
-      width: currentSize.previewWidth,
-      height: currentSize.previewHeight,
-
-      canvasWidth: currentSize.width,
-      canvasHeight: currentSize.height,
-
-      style: {
-        margin: "0",
-        transform: "none",
-      },
-    });
-
-    const caption = generateCaption(
-      settings.issueDate,
-      selectedCertificates
-    );
-
-    window.opener.postMessage(
-      {
-        type: "DALEELAK_SOCIAL_POST",
-        source: "certificates",
-        title: "شهادات البنوك المصرية",
-        caption,
-        image,
-      },
-      "*"
-    );
-
-    toast.success(
-      "تم إرسال البوستر والكابشن إلى Social Dashboard"
-    );
-  } catch (error) {
-    console.error(error);
-
-    toast.error(
-      "تعذر إرسال البوست إلى Social Dashboard"
-    );
-  }
-}
 
   /* ===========================
       Copy Caption
   =========================== */
 
   async function copyCaption() {
-
     try {
-
       await navigator.clipboard.writeText(
-
         generateCaption(
           settings.issueDate,
-          selectedCertificates
+          selectedCertificates,
+          settings.showPracticalExample
         )
-
       );
 
       toast.success(
         "تم نسخ النص"
       );
-
     } catch {
-
       toast.error(
         "تعذر نسخ النص"
       );
-
     }
-
   }
 
   /* ===========================
@@ -367,9 +403,7 @@ export default function CertificatesPosterClient({
   =========================== */
 
   function resetSettings() {
-
     setSettings({
-
       issueDate: new Date()
         .toISOString()
         .slice(0, 10),
@@ -378,31 +412,25 @@ export default function CertificatesPosterClient({
 
       size: "story",
 
-      banks: createPosterBanks(
-        banks
-      ),
+      banks:
+        createPosterBanks(banks),
 
+      showPracticalExample: false,
     });
 
     toast.success(
       "تم إعادة ضبط الإعدادات"
     );
-
   }
+
   /* ===========================
       UI
   =========================== */
 
   return (
-
     <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
 
-      {/* =======================================
-          Control Panel
-      ======================================= */}
-
       <CertificateSelection
-
         banks={settings.banks}
 
         settings={settings}
@@ -411,6 +439,10 @@ export default function CertificatesPosterClient({
 
         updateCertificate={
           updateCertificate
+        }
+
+        updatePracticalExample={
+          updatePracticalExample
         }
 
         updateTheme={updateTheme}
@@ -422,31 +454,27 @@ export default function CertificatesPosterClient({
         }
 
         copyCaption={copyCaption}
-        sendToSocialDashboard={sendToSocialDashboard}
+
+        sendToSocialDashboard={
+          sendToSocialDashboard
+        }
 
         resetSettings={
           resetSettings
         }
-
       />
 
-      {/* =======================================
-          Poster Preview
-      ======================================= */}
-
       <div className="overflow-auto rounded-xl border bg-muted/20 p-6">
-
-          <CertificatePosterPreview
-            posterRef={posterRef}
-            settings={settings}
-            certificates={selectedCertificates}
-            theme={currentTheme}
-          />
-
+        <CertificatePosterPreview
+          posterRef={posterRef}
+          settings={settings}
+          certificates={
+            selectedCertificates
+          }
+          theme={currentTheme}
+        />
       </div>
 
     </div>
-
   );
-
-}    
+}

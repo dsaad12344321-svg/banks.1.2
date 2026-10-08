@@ -36,7 +36,7 @@ export default function CertificatePosterPreview({
   const columns =
     certificates.length <= 1
       ? "grid-cols-1"
-      : certificates.length <= 6
+      : certificates.length <= 5
       ? "grid-cols-2"
       : "grid-cols-3";
 
@@ -180,49 +180,78 @@ export default function CertificatePosterPreview({
               paddingBottom: layout.gridBottom,
             }}
           >
-            {certificates.map((certificate) => (
-              <div key={certificate.id}>
-                <CertificateCard
-                  certificate={certificate}
-                  theme={theme}
-                  size={settings.size}
-                />
+            {certificates.map((certificate, index) => {
+              const isLastOfFive =
+                certificates.length === 5 && index === 4;
 
-                {/* ===========================
-                    Practical Example
-                =========================== */}
-                {settings.showPracticalExample && (
+              return (
+                <div
+                  key={certificate.id}
+                  className={
+                    isLastOfFive
+                      ? "col-span-2 flex justify-center"
+                      : ""
+                  }
+                >
                   <div
-                    className="mt-2 rounded-xl border bg-white text-center shadow-sm"
-                    style={{
-                      padding: `${Math.max(8, layout.gridGap / 2)}px`,
-                    }}
-                    dir="rtl"
+                    className={
+                      isLastOfFive
+                        ? "w-1/2"
+                        : "w-full"
+                    }
                   >
-                    <div
-                      className={`font-extrabold ${theme.title}`}
-                      style={{
-                        fontSize: Math.max(12, layout.dateLabel),
-                        marginBottom: 4,
-                      }}
-                    >
-                     
-                    </div>
+                    <CertificateCard
+                      certificate={certificate}
+                      theme={theme}
+                      size={settings.size}
+                    />
 
-                    <div
-                      className="text-gray-700"
-                      style={{
-                        fontSize: Math.max(9, layout.footerText),
-                        lineHeight: 1.6,
-                        whiteSpace: "pre-line",
-                      }}
-                    >
-                      {generatePracticalExample(certificate)}
-                    </div>
+                    {/* ===========================
+                        Practical Example
+                    =========================== */}
+                    {settings.showPracticalExample && (
+                      <div
+                        className="mt-2 rounded-xl border bg-white text-center shadow-sm"
+                        style={{
+                          padding: `${Math.max(
+                            8,
+                            layout.gridGap / 2
+                          )}px`,
+                        }}
+                        dir="rtl"
+                      >
+                        <div
+                          className={`font-extrabold ${theme.title}`}
+                          style={{
+                            fontSize: Math.max(
+                              12,
+                              layout.dateLabel
+                            ),
+                            marginBottom: 4,
+                          }}
+                        ></div>
+
+                        <div
+                          className="text-gray-700"
+                          style={{
+                            fontSize: Math.max(
+                              9,
+                              layout.footerText
+                            ),
+                            lineHeight: 1.6,
+                            whiteSpace: "pre-line",
+                          }}
+                        >
+                          {generatePracticalExample(
+                            certificate
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
 
           {/* ===========================

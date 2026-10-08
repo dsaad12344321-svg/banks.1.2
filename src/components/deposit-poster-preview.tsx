@@ -32,7 +32,7 @@ export default function DepositPosterPreview({
   const columns =
     deposits.length <= 1
       ? "grid-cols-1"
-      : deposits.length <= 6
+      : deposits.length <= 5
       ? "grid-cols-2"
       : "grid-cols-3";
 
@@ -167,49 +167,76 @@ export default function DepositPosterPreview({
               paddingBottom: layout.gridBottom,
             }}
           >
-            {deposits.map((deposit) => (
-              <div key={deposit.id}>
-                <DepositCard
-                  deposit={deposit}
-                  theme={theme}
-                  size={settings.size}
-                />
+            {deposits.map((deposit, index) => {
+              const isLastOfFive =
+                deposits.length === 5 && index === 4;
 
-                {/* ===========================
-                    Practical Example
-                =========================== */}
-                {settings.showPracticalExample && (
+              return (
+                <div
+                  key={deposit.id}
+                  className={
+                    isLastOfFive
+                      ? "col-span-2 flex justify-center"
+                      : ""
+                  }
+                >
                   <div
-                    className="mt-2 rounded-xl border bg-white text-center shadow-sm"
-                    style={{
-                      padding: `${Math.max(8, layout.gridGap / 2)}px`,
-                    }}
-                    dir="rtl"
+                    className={
+                      isLastOfFive
+                        ? "w-1/2"
+                        : "w-full"
+                    }
                   >
-                    <div
-                      className={`font-extrabold ${theme.title}`}
-                      style={{
-                        fontSize: Math.max(12, layout.dateLabel),
-                        marginBottom: 4,
-                      }}
-                    >
-                     
-                    </div>
+                    <DepositCard
+                      deposit={deposit}
+                      theme={theme}
+                      size={settings.size}
+                    />
 
-                    <div
-                      className="text-gray-700"
-                      style={{
-                        fontSize: Math.max(9, layout.footerText),
-                        lineHeight: 1.6,
-                        whiteSpace: "pre-line",
-                      }}
-                    >
-                      {generatePracticalExample(deposit)}
-                    </div>
+                    {/* ===========================
+                        Practical Example
+                    =========================== */}
+                    {settings.showPracticalExample && (
+                      <div
+                        className="mt-2 rounded-xl border bg-white text-center shadow-sm"
+                        style={{
+                          padding: `${Math.max(
+                            8,
+                            layout.gridGap / 2
+                          )}px`,
+                        }}
+                        dir="rtl"
+                      >
+                        <div
+                          className={`font-extrabold ${theme.title}`}
+                          style={{
+                            fontSize: Math.max(
+                              12,
+                              layout.dateLabel
+                            ),
+                            marginBottom: 4,
+                          }}
+                        ></div>
+
+                        <div
+                          className="text-gray-700"
+                          style={{
+                            fontSize: Math.max(
+                              9,
+                              layout.footerText
+                            ),
+                            lineHeight: 1.6,
+                            whiteSpace: "pre-line",
+                          }}
+                        >
+                          {generatePracticalExample(deposit)}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
 
           {/* Footer */}

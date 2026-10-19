@@ -25,31 +25,20 @@ export interface TreasuryBillResult {
   days: number;
   rate: number;
   amount: number;
-
   poundValue: number;
-
   actualDeduction: number;
-
   upfrontProfit: number;
-
   tax: number;
-
   netProfit: number;
-
   principalMinusTax: number;
-
   netProfitRate: number;
-
   actualNetProfitRate: number;
 }
 
 export interface PosterSettings {
   issueDate: string;
-
   theme: PosterTheme;
-
   size: PosterSize;
-
   bills: TreasuryBillInput[];
 }
 
@@ -63,6 +52,12 @@ export const DEFAULT_BILLS: TreasuryBillInput[] = [
     rate: 0,
     enabled: true,
     status: "available",
+  },
+  {
+    days: 357,
+    rate: 0,
+    enabled: false,
+    status: "hidden",
   },
   {
     days: 273,
@@ -91,85 +86,40 @@ export const DEFAULT_BILLS: TreasuryBillInput[] = [
 export const POSTER_THEMES = {
   green: {
     name: "أخضر",
-
     background:
       "bg-gradient-to-br from-emerald-50 via-white to-emerald-100",
-
-    header:
-      "bg-emerald-600",
-
-    title:
-      "text-emerald-700",
-
-    accent:
-      "text-emerald-600",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-emerald-500",
-
-    shadow:
-      "shadow-emerald-300/40",
+    header: "bg-emerald-600",
+    title: "text-emerald-700",
+    accent: "text-emerald-600",
+    card: "bg-white",
+    border: "border-emerald-500",
+    shadow: "shadow-emerald-300/40",
   },
-
   blue: {
     name: "أزرق",
-
     background:
       "bg-gradient-to-br from-sky-50 via-white to-sky-100",
-
-    header:
-      "bg-sky-600",
-
-    title:
-      "text-sky-700",
-
-    accent:
-      "text-sky-600",
-
-    card:
-      "bg-white",
-
-    border:
-      "border-sky-500",
-
-    shadow:
-      "shadow-sky-300/40",
+    header: "bg-sky-600",
+    title: "text-sky-700",
+    accent: "text-sky-600",
+    card: "bg-white",
+    border: "border-sky-500",
+    shadow: "shadow-sky-300/40",
   },
-
   dark: {
     name: "داكن",
-
     background:
       "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950",
-
-    header:
-      "bg-slate-950",
-
-    title:
-      "text-white",
-
-    accent:
-      "text-emerald-400",
-
-    card:
-      "bg-slate-800",
-
-    border:
-      "border-slate-600",
-
-    shadow:
-      "shadow-black/60",
+    header: "bg-slate-950",
+    title: "text-white",
+    accent: "text-emerald-400",
+    card: "bg-slate-800",
+    border: "border-slate-600",
+    shadow: "shadow-black/60",
   },
 } as const;
 
 export type PosterTheme = keyof typeof POSTER_THEMES;
-
-/* ==========================================================
-   Export Sizes
-========================================================== */
 
 /* ==========================================================
    Export Sizes
@@ -183,7 +133,6 @@ export const POSTER_SIZES = {
     previewWidth: 420,
     previewHeight: 746.67,
   },
-
   square: {
     label: "Square 1:1 — 1080×1080",
     width: 1080,
@@ -191,7 +140,6 @@ export const POSTER_SIZES = {
     previewWidth: 420,
     previewHeight: 420,
   },
-
   portrait45: {
     label: "Portrait 4:5 — 1080×1350",
     width: 1080,
@@ -199,7 +147,6 @@ export const POSTER_SIZES = {
     previewWidth: 420,
     previewHeight: 525,
   },
-
   portrait34: {
     label: "Portrait 3:4 — 1080×1440",
     width: 1080,
@@ -207,7 +154,6 @@ export const POSTER_SIZES = {
     previewWidth: 420,
     previewHeight: 560,
   },
-
   landscape: {
     label: "Landscape 1.91:1 — 1200×627",
     width: 1200,
@@ -218,8 +164,6 @@ export const POSTER_SIZES = {
 } as const;
 
 export type PosterSize = keyof typeof POSTER_SIZES;
-
-
 
 /* ==========================================================
    Helpers
@@ -267,6 +211,7 @@ export function formatDate(
     "ar-EG"
   );
 }
+
 /* ==========================================================
    Calculation Engine
 ========================================================== */
@@ -282,22 +227,11 @@ export function calculateTreasuryBill(
     1 / (((days / 365) * interestRate) + 1);
 
   const actualDeduction = amount * poundValue;
-
-  const upfrontProfit =
-    amount - actualDeduction;
-
-  const tax =
-    upfrontProfit * TAX_RATE;
-
-  const netProfit =
-    upfrontProfit - tax;
-
-  const principalMinusTax =
-    amount - tax;
-
-  const netProfitRate =
-    (netProfit / amount) * 100;
-
+  const upfrontProfit = amount - actualDeduction;
+  const tax = upfrontProfit * TAX_RATE;
+  const netProfit = upfrontProfit - tax;
+  const principalMinusTax = amount - tax;
+  const netProfitRate = (netProfit / amount) * 100;
   const actualNetProfitRate =
     (netProfit / actualDeduction) * 100;
 
@@ -305,21 +239,13 @@ export function calculateTreasuryBill(
     days,
     rate,
     amount,
-
     poundValue,
-
     actualDeduction,
-
     upfrontProfit,
-
     tax,
-
     netProfit,
-
     principalMinusTax,
-
     netProfitRate,
-
     actualNetProfitRate,
   };
 }
@@ -352,44 +278,26 @@ export function generateCaption(
   const lines: string[] = [];
 
   lines.push("📢 نتائج أذون الخزانة المصرية");
-
   lines.push("");
-
   lines.push(
     `📅 تاريخ الإصدار : ${formatDate(issueDate)}`
   );
-
   lines.push("");
 
   bills.forEach((bill) => {
+    lines.push(`▪ ${bill.days} يوم`);
     lines.push(
-      `▪ ${bill.days} يوم`
+      `العائد : ${formatPercent(bill.rate)}`
     );
-
     lines.push(
-      `العائد : ${formatPercent(
-        bill.rate
-      )}`
+      `صافى الربح : ${formatCurrency(bill.netProfit)} جنيه`
     );
-
-    lines.push(
-      `صافى الربح : ${formatCurrency(
-        bill.netProfit
-      )} جنيه`
-    );
-
     lines.push("");
   });
 
-  lines.push(
-    "💰 جميع الحسابات بعد خصم الضريبة."
-  );
-
+  lines.push("💰 جميع الحسابات بعد خصم الضريبة.");
   lines.push("");
-
-  lines.push(
-    "🌐 https://daleelakelbanky.vercel.app"
-  );
+  lines.push("🌐 https://daleelakelbanky.vercel.app");
 
   return lines.join("\n");
 }

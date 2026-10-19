@@ -66,9 +66,26 @@ export default function TreasuryBillsPosterClient() {
           ? parsed.size
           : "story";
 
+      // Merge saved settings with current defaults so newly added
+      // bill durations (such as 357 days) appear for existing users.
+      const savedBills = Array.isArray(parsed?.bills)
+        ? parsed.bills as TreasuryBillInput[]
+        : [];
+
+      const bills = createDefaultBills().map((defaultBill) => {
+        const savedBill = savedBills.find(
+          (bill) => bill.days === defaultBill.days
+        );
+
+        return savedBill
+          ? { ...defaultBill, ...savedBill }
+          : defaultBill;
+      });
+
       setSettings({
         ...parsed,
         size,
+        bills,
       });
     } catch {}
   }, []);

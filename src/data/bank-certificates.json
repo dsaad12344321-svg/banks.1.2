@@ -229,7 +229,7 @@
           "id": "elahly-cert-variable36-m",
           "name": "الشهادة البلاتينية ذات العائد المتغير",
           "duration": 36,
-          "interestRate": 19.5,
+          "interestRate": 20.5,
           "minimumRate": 17,
           "returnType": "variable",
           "type": "monthly",

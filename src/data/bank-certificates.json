@@ -9,16 +9,16 @@
           "id": "misr-cert-fixed36-m",
           "name": "شھادة القمة-عائد شهرى",
           "duration": 36,
-          "interestRate": 17.75,
+          "interestRate": 18.75,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.75,
-            "year2": 17.75,
-            "year3": 17.75
+            "year1": 18.75,
+            "year2": 18.75,
+            "year3": 18.75
           },
           "type": "monthly",
           "minAmount": 1000,
-          "description": "شهادة ادخار لمدة 3 سنوات بعائد ثابت %17.75",
+          "description": "شهادة ادخار لمدة 3 سنوات بعائد ثابت %17.85",
           "features": [
             "عائد شهرى",
             "3 سنوات",
@@ -30,16 +30,16 @@
           "id": "misr-cert-fixed36-q",
           "name": "شهادة القمة-عائد ربع سنوى",
           "duration": 36,
-          "interestRate": 17.85,
+          "interestRate": 18.85,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.85,
-            "year2": 17.85,
-            "year3": 17.85
+            "year1": 18.85,
+            "year2": 18.85,
+            "year3": 18.85
           },
           "type": "quarterly",
           "minAmount": 1000,
-          "description": "شهادة ادخار لمدة 3 سنوات بعائد ثابت 17.85% يُصرف ربع سنوياً",
+          "description": "شهادة ادخار لمدة 3 سنوات بعائد ثابت 18.85% يُصرف ربع سنوياً",
           "features": [
             "عائد ربع سنوى",
             "3 سنوات",
@@ -144,16 +144,16 @@
           "id": "elahly-cert-fixed36-m",
           "name": "الشهادة البلاتينيه 3 سنوات",
           "duration": 36,
-          "interestRate": 17.75,
+          "interestRate": 18.75,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.75,
-            "year2": 17.75,
-            "year3": 17.75
+            "year1": 18.75,
+            "year2": 18.75,
+            "year3": 18.75
           },
           "type": "monthly",
           "minAmount": 1000,
-          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.75%",
+          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.85%",
           "features": [
             "عائد ثابت",
             "3 سنوات",
@@ -165,16 +165,16 @@
           "id": "elahy-cert-fixed36-q",
           "name": "الشهادة البلاتينيه 3 سنوات - عائد ربع سنوى",
           "duration": 36,
-          "interestRate": 17.85,
+          "interestRate": 18.85,
           "returnType": "fixed",
           "graduatedRates": {
-            "year1": 17.85,
-            "year2": 17.85,
-            "year3": 17.85
+            "year1": 18.85,
+            "year2": 18.85,
+            "year3": 18.85
           },
           "type": "quarterly",
           "minAmount": 1000,
-          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 17.85% يُصرف ربع سنوياً",
+          "description": "شهادة ادخار بلاتينية لمدة 3 سنوات بعائد ثابت 18.85% يُصرف ربع سنوياً",
           "features": [
             "عائد ثابت",
             "3 سنوات",
@@ -290,7 +290,7 @@
           "id": "cib-cert-fixed36-m",
           "name": "شهادة Premium",
           "duration": 36,
-          "interestRate": 17.5,
+          "interestRate": 18,
           "returnType": "fixed",
           "graduatedRates": {
             "year1": 18,
@@ -299,7 +299,7 @@
           },
           "type": "monthly",
           "minAmount": 50000,
-          "description": "شهادة Premium لمدة 3 سنوات بعائد ثابت 17.5% يُصرف شهرياً",
+          "description": "شهادة Premium لمدة 3 سنوات بعائد ثابت 18% يُصرف شهرياً",
           "features": [
             "عائد شهرى",
             "3 سنوات",
